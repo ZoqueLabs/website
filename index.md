@@ -4,6 +4,20 @@ layout: home
 permalink: /
 ---
 
-# Lorem ipsum
+## Quienes somos?
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Hackeamos desde el sur. Somos un lab de seguridad digital que investiga, construye y comparte defensas para movimientos sociales y comunidades en lucha.
+
+## Qué hacemos?
+
+Investigamos, desarrollamos y compartimos estrategias de seguridad digital para movimientos sociales y comunidades en riesgo. Nuestra base: análisis técnico con enfoque de derechos humanos.
+
+## Trabajamos en:
+
+    - Análisis forense
+    - Inteligencia y monitoreo de amenazas
+    - Seguridad ofensiva e ingeniería inversa
+    - Investigación participativa en comunidades técnicas y no técnicas
+
+
+
