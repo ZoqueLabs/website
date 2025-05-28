@@ -1,8 +1,8 @@
 {%- assign page_paths = site.header_pages | default: default_paths -%}
 <header>
   <div class="menu">
-    <table><tr><td>ZoqueLabs</td><td align="right">
-    <ul>
+    <table><tr><td>ZoqueLabs</td><td>
+    <ul align="right">
       {%- for path in page_paths -%}
         {%- assign my_page = site.pages | where: "path", path | first -%}
         {%- if my_page.title -%}
