@@ -1,7 +1,72 @@
+<style>
+  body {
+    margin: 0;
+    background-color: #0d0d0d;
+    font-family: 'Courier New', Courier, monospace;
+    color: #00ffe7;
+  }
+
+  .menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em 2em;
+    border-bottom: 2px solid #00ffe7;
+    box-shadow: 0 0 10px #00ffe766;
+  }
+
+  .brand {
+    font-weight: bold;
+    font-size: 1.6em;
+    color: #00ffe7;
+    text-shadow: 0 0 5px #00ffe7, 0 0 10px #00ffe7;
+    letter-spacing: 1px;
+  }
+
+  .menu ul {
+    list-style: none;
+    display: flex;
+    gap: 2em;
+    margin: 0;
+    padding: 0;
+  }
+
+  .menu li a {
+    text-decoration: none;
+    color: #00ffe7;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .menu li a::after {
+    content: "_";
+    position: absolute;
+    left: 100%;
+    top: 0;
+    opacity: 0;
+    animation: blink 1s steps(2, start) infinite;
+  }
+
+  .menu li a:hover::after {
+    opacity: 1;
+  }
+
+  .menu li a:hover {
+    text-shadow: 0 0 5px #00ffe7, 0 0 15px #00ffe7;
+  }
+
+  @keyframes blink {
+    0%   { opacity: 1; }
+    49%  { opacity: 1; }
+    50%  { opacity: 0; }
+    99%  { opacity: 0; }
+    100% { opacity: 1; }
+  }
+</style>
 {%- assign page_paths = site.header_pages | default: default_paths -%}
 <header>
   <div class="menu">
-    ZoqueLabs
+    <div class="brand">ZoqueLabs</div>
     <ul>
       {%- for path in page_paths -%}
         {%- assign my_page = site.pages | where: "path", path | first -%}
