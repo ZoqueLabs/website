@@ -2,7 +2,7 @@
 <header>
   <div class="menu">
     <table><tr><td>ZoqueLabs</td><td>
-    <ul align="right">
+    <ul class="menu">
       {%- for path in page_paths -%}
         {%- assign my_page = site.pages | where: "path", path | first -%}
         {%- if my_page.title -%}
