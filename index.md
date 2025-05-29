@@ -4,13 +4,13 @@ layout: home
 permalink: /
 ---
 
-## Quienes somos?
+## ¿Quiénes somos?
 
 Hackeamos desde el sur. Somos un lab de seguridad digital que investiga, construye y comparte defensas para movimientos sociales y comunidades en lucha.
 
-## Qué hacemos?
+## ¿Qué hacemos?
 
-Investigamos, desarrollamos y compartimos estrategias de seguridad digital para movimientos sociales y comunidades en riesgo. Nuestra base: análisis técnico con enfoque de derechos humanos.
+Investigamos, desarrollamos y compartimos estrategias de seguridad digital. Nuestra base: análisis técnico con enfoque de derechos humanos.
 
 ## Trabajamos en:
 
