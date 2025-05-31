@@ -10,10 +10,10 @@ Hackeamos desde el sur. Somos un lab de seguridad digital que investiga, constru
 
 ## ¿Qué hacemos?
 
-    - Análisis forense
-    - Inteligencia y monitoreo de amenazas
-    - Seguridad ofensiva e ingeniería inversa
-    - Investigación participativa en comunidades técnicas y no técnicas
+- Análisis forense
+- Inteligencia y monitoreo de amenazas
+- Seguridad ofensiva e ingeniería inversa
+- Investigación participativa en comunidades técnicas y no técnicas
 
 
 
