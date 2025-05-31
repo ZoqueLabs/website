@@ -132,4 +132,6 @@ pre { background-color: #2b2b1c;  border: none;  padding: 0;  margin: 0;  overfl
 .highlight .vi { color: var(--code-color-7); } /* Name.Variable.Instance */
 .highlight .il { color: var(--code-color-14); } /* Literal.Number.Integer.Long */
 
-.sitename { color: var(--code-color-1); margin-right: 15px; font-size: 30px;}
+.sitename { color: var(--code-color-1); margin-right: 15px; font-size: 30px; text-align: center; }
+.sitename a { text-decoration: none;  color: var(--text-color); }
+.sitename ul li a:hover { text-decoration: none; color: var(--background-color); background-color: var(--base-color); }
