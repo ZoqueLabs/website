@@ -14,8 +14,12 @@ Hackeamos desde el sur. Somos un lab de seguridad digital que investiga, constru
 - Inteligencia y monitoreo de amenazas
 - Seguridad ofensiva e ingeniería inversa
 - Investigación participativa en comunidades técnicas y no técnicas
+
+<br>
   
 <div align="center">°º¤ø,¸¸,ø¤º°`°º¤ø,¸,ø¤°º¤ø,¸¸,ø¤º°`°º¤ø,¸</div>
+
+<br>
 
 ## Contacto
 
