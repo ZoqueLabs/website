@@ -16,3 +16,9 @@ remote_theme: b2a3e8/jekyll-theme-console
 
 plugins:
   - jekyll-seo-tag
+
+kramdown:
+  syntax_highlighter: rouge
+  input: GFM
+  auto_ids:       true
+  toc_levels:     1..3
