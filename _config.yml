@@ -2,9 +2,9 @@
 
 #google_analytics: UA-NNNNNNNN-N
 
-header_pages:
-  - index.md
-  - blog.md
+#header_pages:
+#  - index.md
+#  - blog.md
 
 footer: 'rss'
 
