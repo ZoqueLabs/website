@@ -6,7 +6,7 @@ permalink: /
 
 ## ¿Quiénes somos?
 
-Hackeamos desde el sur. Somos un lab de seguridad digital que investiga, construye y comparte defensas para movimientos sociales y comunidades en lucha. Nuestra base: análisis técnico con enfoque de derechos humanos.
+Somos un lab de seguridad digital que investiga, construye y comparte defensas para movimientos sociales y comunidades en lucha. Nuestra base: análisis técnico con enfoque de derechos humanos. Hackeamos desde el sur. 
 
 ## ¿Qué hacemos?
 
@@ -25,7 +25,7 @@ Hackeamos desde el sur. Somos un lab de seguridad digital que investiga, constru
 
 Sempre estaremos felices de recibir comentarios, preguntas o lo que sea en:  
 
-contacto [at] zoquelabs.xyz  
+<div text-align="center"><strong>contacto [at] zoquelabs.xyz</strong></div>  
 
 Llave PGP:  
 
