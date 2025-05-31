@@ -2,8 +2,7 @@
 layout: default
 ---
 
-{% assign contentwonl = content | strip_newlines %} {% unless contentwonl == ""  %} <br /> {% endunless %} <!-- add line break if there is any content -->
-
+<h2>Últimas publicaciones</h2>
 {%- if site.posts.size > 0 -%}
   <ul>
     {%- for post in site.posts -%}
@@ -14,6 +13,9 @@ layout: default
     {%- endfor -%}
   </ul>
 {%- endif -%}
+
+{% assign contentwonl = content | strip_newlines %} {% unless contentwonl == ""  %} <br /> {% endunless %} <!-- add line break if there is any content -->
+
 
 {{ content }}
 
