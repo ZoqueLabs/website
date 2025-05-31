@@ -1,0 +1,8 @@
+---
+layout: post
+title:  "Experimento 0x00 - CVE-2024-0044 run-as debuggable condition bypass"
+date:   2025-05-31 13:12:45 -0500
+categories:
+---
+
+## hola
