@@ -25,7 +25,7 @@ Somos un lab de seguridad digital que investiga, construye y comparte defensas p
 
 Sempre estaremos felices de recibir comentarios, preguntas o lo que sea en:  
 
-<div text-align="center"><strong>contacto [at] zoquelabs.xyz</strong></div>  
+<div align="center"><strong>contacto [at] zoquelabs.xyz</strong></div>  
 
 Llave PGP:  
 
