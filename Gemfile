@@ -5,3 +5,8 @@ gemspec
 
 
 gem 'jekyll-seo-tag'
+
+gem "webrick", "~> 1.9"
+
+gem "logger"
+
