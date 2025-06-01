@@ -1,12 +1,13 @@
 # Example Site settings
-
+title: ZoqueLabs
+description: ZoqueLabs.xyz feed
 #google_analytics: UA-NNNNNNNN-N
 
 header_pages:
   - index.md
 #  - blog.md
 
-footer: 'rss'
+footer: '<a href="/feed.zoquelabs.xml">rss</a>'
 
 style: dark # dark (default) or light
 # listen_for_clients_preferred_style: true # true or false (default)
@@ -16,6 +17,7 @@ remote_theme: b2a3e8/jekyll-theme-console
 
 plugins:
   - jekyll-seo-tag
+  - jekyll-feed
 
 kramdown:
   syntax_highlighter_opts:

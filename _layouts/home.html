@@ -3,14 +3,19 @@ layout: default
 ---
 
 <h1 align="center"><*_*> Publicaciones:</h1>
-<div align="center">====================</div>
+<div align="center">=========================</div>
 <br>
 {%- if site.posts.size > 0 -%}
   <ul>
     {%- for post in site.posts -%}
     <li>
       {%- assign date_format = "%Y-%m-%d" -%}
-      [ {{ post.date | date: date_format }} ] <a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+      [ {{ post.date | date: date_format }} ] <a href="{{ post.url | relative_url }}">
+        <strong>
+          {{ post.title | escape }}
+        </strong>
+      </a>
+      <div class="pub_description"> {{ post.description | scape}} </div>
     </li>
     {%- endfor -%}
   </ul>

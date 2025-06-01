@@ -10,3 +10,4 @@ gem "webrick", "~> 1.9"
 
 gem "logger"
 
+gem 'jekyll-feed'
