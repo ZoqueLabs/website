@@ -23,7 +23,7 @@ Somos un lab de seguridad digital que investiga, construye y comparte defensas p
 
 ## Contacto
 
-Sempre estaremos felices de recibir comentarios, preguntas o lo que sea en:  
+Siempre estaremos felices de recibir comentarios, preguntas o lo que sea en:  
 
 <div align="center"><strong>contacto [at] zoquelabs.xyz</strong></div>  
 
