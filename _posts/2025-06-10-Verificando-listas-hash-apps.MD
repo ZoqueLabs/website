@@ -8,7 +8,7 @@ description: Mini-tutorial para investigar listas de hashes de apps en Virus Tot
 ---
 
 <div align=center>
-<h1>--[ Verificando apps de Android en VirusTotal con sus hashes ]--</h1>
+<h1>--[ Verificando _muchas_ apps de Android en VirusTotal con sus hashes ]--</h1>
 Por: ZoqueLabs
 <br>
 <br>
@@ -17,7 +17,6 @@ Este escrito se distribuye con una licencia Creative Commons CC BY-SA (Reconocim
 <a href="hhtp://">English version</a>
 </div>
 
-# Verificando _muchas_ apps de Android en VirusTotal con sus hashes
 
 ## Intro
 
@@ -46,7 +45,7 @@ bugreport.zip     getprop.txt  processes.txt       settings_secure.txt
 command.log       hashes.csv   root_binaries.json  settings_system.txt
 ```
 &nbsp;
----
+
 
 ## Extrayendo hashes de las aplicaciones de `packages.json`
 
@@ -72,6 +71,7 @@ Primero, navega hasta el directorio donde está ubicada la extracción con el co
 ```bash
 cd path/to/your/backup/
 ```
+&nbsp;
 
 Luego ejecuta este comando:
 
@@ -97,6 +97,7 @@ Si quieres guardar la lista de hashes en un archivo para luego subirlo a VirusTo
 ```bash
 jq -r '.[].files.[].sha256' packages.json > hashesobtenidos.txt
 ```
+&nbsp;
 Con este archivo tendrás todos los hashes en bulk.
 
 ---
@@ -113,13 +114,17 @@ La sección [_colecciones_](https://blog.virustotal.com/2021/11/introducing-viru
 
 1. Ingresa a Visrus total, crea una cuenta o logueate si ya tienes una.
 2. Puedes dar clic en el icono de busqueda en VT o dar clic [acá](https://www.virustotal.com/gui/collections).
+
 &nbsp;
 ![Image VT](/assets/vt1.png)
 &nbsp;
+
 3. Da clic en **Create new collection** (crear nueva colección).
+
 &nbsp;
 ![Image VT](/assets/vt2.png)
 &nbsp;
+
 4. Asigna un nombre a tu colección pj: `hashapps`.
 5. Pega los hashes que extrajiste desde `packages.json`, uno por línea.
 6. Guarda la colección.
@@ -132,22 +137,22 @@ VirusTotal se encarga de analizar los hashes automáticamente y te muestra vario
 ![Image VT](/assets/vt3.png)
 &nbsp;
 
-- **Detecciones por motores antivirus**: te dice si algún motor ha marcado el archivo como malicioso, y qué nombre le da (por ejemplo, `Android/TrojanSpy.Agent`).
+**Detecciones por motores antivirus**: te dice si algún motor ha marcado el archivo como malicioso, y qué nombre le da (por ejemplo, `Android/TrojanSpy.Agent`).
 
-- **Etiquetas descriptivas**: estas etiquetas no solo indican si es un virus, sino que también señalan otros comportamientos o características, como:
+**Etiquetas descriptivas**: estas etiquetas no solo indican si es un virus, sino que también señalan otros comportamientos o características, como:
   - `has-trackers`: si la app incluye rastreadores conocidos (como Google, Facebook, etc.).
   - `uses-permission`: si utiliza permisos sensibles como acceso a SMS, cámara, ubicación o almacenamiento.
   - `obfuscator`: si el código está ofuscado, lo que puede indicar que intenta esconder algo.
   - Otras etiquetas como `spyware`, `dropper`, `apk-downloader`, entre otras que ayudan a entender mejor el comportamiento de la app.
 
-- **Otra información del archivo**:
+**Otra información del archivo**:
   - Tamaño y tipo de archivo.
   - Fecha del análisis.
   - Nombre del archivo (si se conserva).
   - Información del certificado o firma digital, si está disponible.
   - Detalles técnicos del `AndroidManifest.xml`, como los permisos y servicios que declara.
 
-- **Relaciones con otros elementos**: VirusTotal también puede mostrar si ese hash está vinculado a otros archivos, URLs, dominios o campañas conocidas.
+**Relaciones con otros elementos**: VirusTotal también puede mostrar si ese hash está vinculado a otros archivos, URLs, dominios o campañas conocidas.
 
 Todo esto permite revisar de forma más completa si una aplicación representa un riesgo, incluso cuando no está clasificada directamente como malware.
 
