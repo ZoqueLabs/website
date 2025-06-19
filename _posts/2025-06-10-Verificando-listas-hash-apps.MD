@@ -8,7 +8,7 @@ description: Mini-tutorial para investigar listas de hashes de apps en Virus Tot
 ---
 
 <div align=center>
-<h1>--[ Verificando _muchas_ apps de Android en VirusTotal con sus hashes ]--</h1>
+<h1>--[ Verificando apps de Android en VirusTotal con sus hashes ]--</h1>
 Por: ZoqueLabs
 <br>
 <br>
