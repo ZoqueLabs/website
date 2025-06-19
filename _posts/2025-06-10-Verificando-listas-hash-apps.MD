@@ -145,6 +145,7 @@ VirusTotal se encarga de analizar los hashes automáticamente y te muestra vario
   - `obfuscator`: si el código está ofuscado, lo que puede indicar que intenta esconder algo.
   - Otras etiquetas como `spyware`, `dropper`, `apk-downloader`, entre otras que ayudan a entender mejor el comportamiento de la app.
 
+
 **Otra información del archivo**:
   - Tamaño y tipo de archivo.
   - Fecha del análisis.
