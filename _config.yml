@@ -5,6 +5,7 @@ description: ZoqueLabs.xyz feed
 
 header_pages:
   - index.md
+  - index_en.md
 #  - blog.md
 
 footer: '<a href="/feed.zoquelabs.xml">rss</a>'

@@ -1,20 +1,21 @@
 ---
 title: /
 layout: home
-permalink: /
-lang: es
+permalink: /en
+lang: en
 ---
 
-## ¿Quiénes somos?
+## Who are we?
 
-Somos un lab de seguridad digital que investiga, construye y comparte defensas para movimientos sociales y comunidades en lucha. Nuestra base: análisis técnico con enfoque de derechos humanos. Hackeamos desde el sur. 
+We’re a digital security lab that investigates, builds, and shares defenses for social movements and communities in struggle. Our foundation: technical analysis with a human rights focus. We hack from the South.
 
-## ¿Qué hacemos?
+## What do we do?
 
-- Análisis forense
-- Inteligencia y monitoreo de amenazas
-- Seguridad ofensiva e ingeniería inversa
-- Investigación participativa en comunidades técnicas y no técnicas
+ - Forensic analysis
+ - Threat intelligence & monitoring
+ - Offensive security & reverse engineering
+ - Participatory research with technical and non-technical communities
+
 
 <br>
   
@@ -22,13 +23,13 @@ Somos un lab de seguridad digital que investiga, construye y comparte defensas p
 
 <br>
 
-## Contacto
+## Contact
 
-Siempre estaremos felices de recibir comentarios, preguntas o lo que sea en:  
+We’re always happy to receive feedback, questions, or anything else at:  
 
 <div align="center"><strong>contacto [at] zoquelabs.xyz</strong></div>  
 
-Llave PGP:  
+PGP key:  
 
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 

@@ -1,10 +1,11 @@
 ---
 layout: post
 title:  "Verificando apps de Android en VirusTotal con sus hashes"
-categories: android forense hash apps 
-tags: 
+categories: [android, forense]
+tags: [android, forense, virustotal, vt, hash, colecciones, collections, malware]
 author: ZoqueLabs
 description: Mini-tutorial para investigar listas de hashes de apps en Virus Total
+lang: es
 ---
 
 <div align=center>
