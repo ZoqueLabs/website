@@ -15,7 +15,7 @@ Por: ZoqueLabs
 <br>
 Este escrito se distribuye con una licencia Creative Commons CC BY-SA (Reconocimiento - Compartir Igual)
 <br>
-<a href="hhtp://">English version</a>
+<a href="/android/forensics/2025/06/10/Verifying-lists-of-hash-apps.html">English version</a>
 </div>
 
 
