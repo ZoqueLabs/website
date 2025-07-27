@@ -129,7 +129,7 @@ En este tutorial usamos la versión gratuita de VirusTotal, porque la idea es fa
 
 Eso sí: en la versión gratuita, cuando subes muchos hashes a una colección, el filtrado de resultados no es tan amigable. No puedes, por ejemplo, ordenar fácilmente por número de detecciones o aplicar filtros avanzados. Por eso es importante que antes de subir, ya tengas muy bien filtradas las apps que podrían ser realmente sospechosas, como lo hicimos en el paso anterior. 
 
-Si tienes acceso a una cuenta premium de VirusTotal, ese análisis en _bulk_ será mucho más fluido, pero en este caso trabajamos con lo que podemos. 
+Si tienes acceso a una cuenta premium de VirusTotal, ese análisis en _bulk_ será mucho más fluido, pero en este caso trabajamos con lo que tenemos disponible - la versión gratis-. 
 
 
 ### Qué son las colecciones de VirusTotal y por qué usarlas?
