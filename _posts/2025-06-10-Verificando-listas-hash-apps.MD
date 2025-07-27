@@ -35,7 +35,7 @@ La idea es ayudarte a identificar comportamientos sospechosos o directamente mal
 
 ## Preparar el entorno con androidqf
 
-Para comenzar, necesitaremos realizar una extracción forense del dispositivo Android usando la herramienta [androidqf](https://github.com/mvt-project/androidqf). Otendrás una carpeta con varios archivos, entre ellos el importante `packages.json`.
+Para comenzar, necesitaremos realizar una extracción forense del dispositivo Android usando la herramienta [androidqf](https://github.com/mvt-project/androidqf). Obtendrás una carpeta con varios archivos, entre ellos el importante `packages.json`.
 
 ```bash
 $ ls
@@ -50,7 +50,7 @@ command.log       hashes.csv   root_binaries.json  settings_system.txt
 
 ## Extrayendo hashes de las aplicaciones de `packages.json`
 
-Después de realizar la extracción forense, encontrarás en la carpeta generada un archivo llamado `packages.json`. Este archivo contiene información detallada sobre todas las aplicaciones instaladas en el dispositivo, incluyendo los hashes criptográficos de cada apk y sus subcomponentes.
+El  `packages.json` contiene información detallada sobre todas las aplicaciones instaladas en el dispositivo, incluyendo los hashes criptográficos de cada apk y sus subcomponentes.
 
 ```bash
  {
@@ -65,27 +65,48 @@ Después de realizar la extracción forense, encontrarás en la carpeta generada
                 "sha512": "77c2fb531da7b2751e3abb9ef25c3d715e75d3978301ee00b66edb3c171205fa97d7daa3fb21c2725aece9d7392b7a7ad90da58f1ea64520398ccebf0c3a6d67",
 ```
 &nbsp;
-Para extraer la lista completa de hashes SHA256 de las aplicaciones desde `packages.json`, usaremos la terminal de Linux (el proceso puede ser similar en MacOS o Windows).
+Puedes extraer la lista completa de hashes SHA256 de las aplicaciones desde `packages.json`, usando la terminal de Linux como te mostramos más adelante (el proceso puede ser similar en MacOS o Windows).
 
-Primero, navega hasta el directorio donde está ubicada la extracción con el comando:
+Sin embargo, en este caso solo nos interesan las aplicaciones que podrían ser sospechosas —es decir, las que no son nativas del sistema o que fueron instaladas desde fuentes desconocidas—, para ello usaremos filtros con `jq` para excluir apps preinstaladas o que parecen "confiables", y concentrarnos en las que realmente valen la pena revisar.
+
+Ahora si, vamos...
+
+Primero, navega hasta el directorio donde está ubicada la extracción:
 
 ```bash
 cd path/to/your/backup/
 ```
 &nbsp;
-
-Luego ejecuta este comando:
+Si quieres extraer todos los hashes puedes ejecutar este comando:
 
 ```
 jq -r '.[].files.[].sha256' packages.json
 ```
 &nbsp;
-**¿Qué hace este comando?**
+Pero como nuestro objetivo es concentrarnos en aplicaciones "sospechosas" vamos a usar filtros más especificos con este comando: 
+```bash
+jq -r '.[] | select (((.name | startswith("com.google.android.") or startswith("com.android.") or startswith("com.samsung") or startswith("com.sec.")) and (.system == true)) | not)' packages.json | jq -r '.files.[].sha256'
+```
 
-Este comando usa `jq` (una herramienta de línea de comandos para procesar archivos JSON) para extraer los valores sha256 de cada archivo dentro de `packages.json`. Por lo tanto cuando lo ejecutamos nos va a dar la lista de hashes que estamos buscando: 
+**¿Qué hace este comando y cuál es nuestro plan?**
+
+Este comando usa `jq` (una herramienta de línea de comandos para procesar archivos JSON) para procesar el archivo `packages.json`. y extraer únicamente los hashes SHA256 de las aplicaciones que no parecen ser del sistema o de fabricantes conocidos como Google o la empresa fabricante -nuestro caso Samsung, pero este lo puedes reemplazar-.
+
+Entonces, vamos por partes:
+
+En primer lugar, `select(...)` aplica un filtro para excluir:
+
+1. Apps cuyo nombre empieza por `com.google.android.`, `com.android.`, `com.samsung` o `com.sec`.
+2. Y además que están marcadas como del sistema `(.system == true)`
+3. `| not` invierte la condición para quedarnos solo con las que no cumplen ese patrón, es decir, apps instaladas desde fuentes desconocidas.
+
+Luego, `.files[].sha256` extrae el hash de cada archivo asociado a esas apps filtradas.
+
+Así, al ejecutar este comando obtendrás una lista filtrada de aplicaciones más interesantes para analizar con VirusTotal.
 
 ```bash
-$ jq -r '.[].files.[].sha256' packages.json 
+$ jq -r '.[] | select (((.name | startswith("com.google.android.") or startswith("com.android.") or startswith("com.samsung") or startswith("com.sec.")) and (.system == true)) | not)' packages.json | jq -r '.files.[].sha256
+
 5f4144359f8fdf52e6d4471a11438aa2c209e4af2d8bc90a4111975d1227c0aa
 9948eaa76138f8a45943cdd81838e4a053a2734ef8a326e108dc3b0b5c4f409d
 5014e20fb03bca12d456f278faf2b1f2f43326930c062e0705fb2cebedfe23b2
@@ -96,7 +117,7 @@ $ jq -r '.[].files.[].sha256' packages.json
 
 Si quieres guardar la lista de hashes en un archivo para luego subirlo a VirusTotal, puedes hacerlo así:
 ```bash
-jq -r '.[].files.[].sha256' packages.json > hashesobtenidos.txt
+jq -r '.[] | select (((.name | startswith("com.google.android.") or startswith("com.android.") or startswith("com.samsung") or startswith("com.sec.")) and (.system == true)) | not)' packages.json | jq -r '.files.[].sha256' > hashesobtenidos.txt
 ```
 &nbsp;
 Con este archivo tendrás todos los hashes en bulk.
@@ -105,7 +126,14 @@ Con este archivo tendrás todos los hashes en bulk.
 
 ## Crear una colección en VirusTotal con los hashes extraídos
 
-Una vez que tenemos la lista de hashes de las aplicaciones instaladas en el dispositivo, podemos aprovechar la funcionalidad de _colecciones_ de VirusTotal para analizarlos en conjunto.
+Una vez que tenemos la lista de hashes de las aplicaciones sospechosas, podemos usar la funcionalidad de _colecciones_ de VirusTotal para analizarlos en conjunto.
+
+En este tutorial usamos la versión gratuita de VirusTotal, porque la idea es facilitar recursos accesibles sin depender de licencias pagas.
+
+Eso sí: en la versión gratuita, cuando subes muchos hashes a una colección, el filtrado de resultados no es tan amigable. No puedes, por ejemplo, ordenar fácilmente por número de detecciones o aplicar filtros avanzados. Por eso es importante que antes de subir, ya tengas muy bien filtradas las apps que podrían ser realmente sospechosas, como lo hicimos en el paso anterior. 
+
+Si tienes acceso a una cuenta premium de VirusTotal, ese análisis en _bulk_ será mucho más fluido, pero en este caso trabajamos con lo que podemos. 
+
 
 ### Qué son las colecciones de VirusTotal y por qué usarlas?
 
