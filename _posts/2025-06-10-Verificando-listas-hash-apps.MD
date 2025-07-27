@@ -47,7 +47,6 @@ command.log       hashes.csv   root_binaries.json  settings_system.txt
 ```
 &nbsp;
 
-
 ## Extrayendo hashes de las aplicaciones de `packages.json`
 
 El  `packages.json` contiene información detallada sobre todas las aplicaciones instaladas en el dispositivo, incluyendo los hashes criptográficos de cada apk y sus subcomponentes.
@@ -72,7 +71,6 @@ Sin embargo, en este caso solo nos interesan las aplicaciones que podrían ser s
 Ahora si, vamos...
 
 Primero, navega hasta el directorio donde está ubicada la extracción:
-
 ```bash
 cd path/to/your/backup/
 ```
@@ -87,7 +85,7 @@ Pero como nuestro objetivo es concentrarnos en aplicaciones "sospechosas" vamos 
 ```bash
 jq -r '.[] | select (((.name | startswith("com.google.android.") or startswith("com.android.") or startswith("com.samsung") or startswith("com.sec.")) and (.system == true)) | not)' packages.json | jq -r '.files.[].sha256'
 ```
-
+&nbsp;
 **¿Qué hace este comando y cuál es nuestro plan?**
 
 Este comando usa `jq` (una herramienta de línea de comandos para procesar archivos JSON) para procesar el archivo `packages.json`. y extraer únicamente los hashes SHA256 de las aplicaciones que no parecen ser del sistema o de fabricantes conocidos como Google o la empresa fabricante -nuestro caso Samsung, pero este lo puedes reemplazar-.
@@ -114,10 +112,9 @@ $ jq -r '.[] | select (((.name | startswith("com.google.android.") or startswith
 ... mas hashes
 ```
 &nbsp;
-
 Si quieres guardar la lista de hashes en un archivo para luego subirlo a VirusTotal, puedes hacerlo así:
 ```bash
-jq -r '.[] | select (((.name | startswith("com.google.android.") or startswith("com.android.") or startswith("com.samsung") or startswith("com.sec.")) and (.system == true)) | not)' packages.json | jq -r '.files.[].sha256' > hashesobtenidos.txt
+$ jq -r '.[] | select (((.name | startswith("com.google.android.") or startswith("com.android.") or startswith("com.samsung") or startswith("com.sec.")) and (.system == true)) | not)' packages.json | jq -r '.files.[].sha256' > hashesobtenidos.txt
 ```
 &nbsp;
 Con este archivo tendrás todos los hashes en bulk.

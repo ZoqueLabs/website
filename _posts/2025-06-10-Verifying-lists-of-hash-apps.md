@@ -49,7 +49,7 @@ command.log       hashes.csv   root_binaries.json  settings_system.txt
 
 ## Extracting App Hashes from `packages.json` 
 
-After performing the forensic extraction, you will find a file named `packages.json` in the generated folder. This file contains detailed information about all the apps installed on the device, including cryptographic hashes of each apk and its subcomponents. 
+The `packages.json` contains detailed information about all the applications installed on the device, including the cryptographic hashes of each apk and its subcomponents.
 
 ```bash 
  { 
@@ -64,30 +64,45 @@ After performing the forensic extraction, you will find a file named `packages.j
                 "sha512": "77c2fb531da7b2751e3abb9ef25c3d715e75d3978301ee00b66edb3c171205fa97d7daa3fb21c2725aece9d7392b7a7ad90da58f1ea64520398ccebf0c3a6d67", 
 ``` 
 &nbsp;
-
 To extract the complete list of SHA256 hashes ​​of your apps from `packages.json`, we'll use the Linux terminal (the process might be similar on MacOS or Windows). 
 
-First, navigate to the directory where the extraction is located with the command: 
+However, in this case we are only interested in applications that could be suspicious — that is, those that are not native to the system or were installed from unknown sources — for analysis.
+
+Now then, let's go...
+
+First, navigate to the directory where the extraction is located: 
 
 ```bash 
 cd path/to/your/backup/ 
 ``` 
 &nbsp;
- 
-
-Then run this command: 
-
-``` 
+If you want to extract all the hashes, you can run this command: 
+```bash
 jq -r '.[].files.[].sha256' packages.json 
 ``` 
 &nbsp;
- 
-**What does this command do?** 
+But since our goal is to focus on "suspicious" applications, we are going to use more specific filters with this command:
+```bash
+jq -r '.[] | select (((.name | startswith("com.google.android.") or startswith("com.android.") or startswith("com.samsung") or startswith("com.sec.")) and (.system == true)) | not)' packages.json | jq -r '.files.[].sha256'
+```
+&nbsp;
+**What does this command do and what is our plan?**
 
-This command uses `jq` (a command-line tool for processing JSON files) to extract the sha256 values ​​from each file inside `packages.json`. So when we run it it will give us the list of hashes we are looking for: 
+This command uses `jq` (a command-line tool to process JSON files) to process the `packages.json` file and extract only the SHA256 hashes of applications that do not appear to be system apps or from well-known manufacturers such as Google or the device manufacturer —in our case, Samsung, but you can replace this with your own-.
+
+So, let's break it down:
+
+1. `select(...)` applies a filter to exclude:
+
+  - Apps whose name starts with `com.google.android.`, `com.android.`, `com.samsung` or `com.sec`.
+  - And also are marked as system `(.system == true)`
+  - `| not` inverts the condition so we are left only with those that do not meet that pattern, that is, apps installed from unknown sources.
+2. `.files[].sha256` extracts the hash of each file associated with those filtered apps.
+
+Thus, by running this command you will obtain a filtered list of applications more interesting for analysis with VirusTotal.
 
 ```bash 
-$ jq -r '.[].files.[].sha256' packages.json 
+$ jq -r '.[] | select (((.name | startswith("com.google.android.") or startswith("com.android.") or startswith("com.samsung") or startswith("com.sec.")) and (.system == true)) | not)' packages.json | jq -r '.files.[].sha256'
 5f4144359f8fdf52e6d4471a11438aa2c209e4af2d8bc90a4111975d1227c0aa 
 9948eaa76138f8a45943cdd81838e4a053a2734ef8a326e108dc3b0b5c4f409d 
 5014e20fb03bca12d456f278faf2b1f2f43326930c062e0705fb2cebedfe23b2 
@@ -95,21 +110,23 @@ $ jq -r '.[].files.[].sha256' packages.json
 ... more hashes 
 ``` 
 &nbsp;
- 
-
 If you want to save the list of hashes in a file and then upload it to VirusTotal, you can do it like this: 
 ```bash 
-jq -r '.[].files.[].sha256' packages.json > hashesobtenidos.txt 
+jq -r '.[] | select (((.name | startswith("com.google.android.") or startswith("com.android.") or startswith("com.samsung") or startswith("com.sec.")) and (.system == true)) | not)' packages.json | jq -r '.files.[].sha256' > hashesobtenidos.txt 
 ``` 
 &nbsp;
- 
 With this file you will have all the hashes in bulk. 
 
 --- 
-
 ## Create a collection in VirusTotal with the extracted hashes 
 
-Once we have the list of hashes from the applications installed on the device, we can take advantage of VirusTotal's _collections_ functionality to analyze them together. 
+Once we have the list of hashes of the suspicious applications, we can use the _collections_ functionality of VirusTotal to analyze them together.
+
+In this tutorial we use the free version of VirusTotal, because the idea is to provide accessible resources without relying on paid licenses.
+
+However: in the free version, when you upload many hashes to a collection, the result filtering is not as friendly. You cannot, for example, easily sort by number of detections. That’s why it’s important that before uploading, you’ve already carefully filtered the apps that could truly be suspicious, just as we did in the previous step.
+
+If you have access to a VirusTotal premium account, that _bulk_ analysis will be much smoother, but in this case, we work with what we have.
 
 ### What are VirusTotal collections and why use them? 
 
