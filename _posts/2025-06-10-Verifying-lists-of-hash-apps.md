@@ -66,7 +66,7 @@ The `packages.json` contains detailed information about all the applications ins
 &nbsp;
 To extract the complete list of SHA256 hashes ​​of your apps from `packages.json`, we'll use the Linux terminal (the process might be similar on MacOS or Windows). 
 
-However, in this case we are only interested in applications that could be suspicious — that is, those that are not native to the system or were installed from unknown sources — for analysis.
+However, for practical reasons, in this case we will try to omit hashes of **system applications** that have or start with common names, if and only if they are applications marked as "system", for this we will use filters with `jq` to exclude apps that seem more "common", and concentrate on the rest. 
 
 Now then, let's go...
 
@@ -81,7 +81,7 @@ If you want to extract all the hashes, you can run this command:
 jq -r '.[].files.[].sha256' packages.json 
 ``` 
 &nbsp;
-But since our goal is to focus on "suspicious" applications, we are going to use more specific filters with this command:
+But since our goal is to concentrate on "less common" applications we will use more specific filters with this command: 
 ```bash
 jq -r '.[] | select (((.name | startswith("com.google.android.") or startswith("com.android.") or startswith("com.samsung") or startswith("com.sec.")) and (.system == true)) | not)' packages.json | jq -r '.files.[].sha256'
 ```
@@ -96,7 +96,7 @@ So, let's break it down:
 
   - Apps whose name starts with `com.google.android.`, `com.android.`, `com.samsung` or `com.sec`.
   - And also are marked as system `(.system == true)`
-  - `| not` inverts the condition so we are left only with those that do not meet that pattern, that is, apps installed from unknown sources.
+  - `| not` inverts the condition so we are left only with those that do not meet that pattern.
 2. `.files[].sha256` extracts the hash of each file associated with those filtered apps.
 
 Thus, by running this command you will obtain a filtered list of applications more interesting for analysis with VirusTotal.
@@ -110,6 +110,8 @@ $ jq -r '.[] | select (((.name | startswith("com.google.android.") or startswith
 ... more hashes 
 ``` 
 &nbsp;
+**note**: Keep in mind that depending on the phone/device manufacturer there are application names that we can exclude by editing the filter pattern that we just saw (in this case, for example, we are excluding apps that start with "com.samsung." and are "system" since we are testing with a Samsung phone). 
+
 If you want to save the list of hashes in a file and then upload it to VirusTotal, you can do it like this: 
 ```bash 
 jq -r '.[] | select (((.name | startswith("com.google.android.") or startswith("com.android.") or startswith("com.samsung") or startswith("com.sec.")) and (.system == true)) | not)' packages.json | jq -r '.files.[].sha256' > hashesobtenidos.txt 
