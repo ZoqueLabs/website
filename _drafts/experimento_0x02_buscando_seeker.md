@@ -71,6 +71,7 @@ Lo interesante es que no necesitas crear cuentas ni registrar nada. Un solo coma
 ```bash
 ssh root@segfault.net
 ```
+&nbsp;
 Por defecto, estas máquinas mueren solas después de un tiempo. Pero hay un truco: puedes guardar tus credenciales de acceso (la clave SSH que se genera la primera vez) y, si vuelves a conectarte antes de 72 horas, tu sesión sigue activa. Esto te permite retomar experimentos sin empezar desde cero, siempre que no dejes pasar demasiado tiempo.
 
 Cuando finalmente cae, simplemente levantas otra y ya esta.
@@ -81,7 +82,9 @@ Notas, problemas tipicos y fix:
 - python3 faltante: apt install -y python3 python3-pip.
 - sin salida a internet: la VM caducó o el nodo está caído → reconectar a otro host de segfault.
 
-**Screenshoot: conectando a segfault**
+<p align="center">
+  <img src="/assets/images/exp0x02/1_Conectando_Segfault.png" />
+</p>
 
 #### 0x01. 2.2 Tmux - mantener vivo a Seeker
 
@@ -102,9 +105,13 @@ tmux new -s seeker      # crear sesión 'seeker'
 Ctrl-b d                # detach
 tmux attach -t seeker   # reconectar
 ```
+&nbsp;
 Esto nos dio la tranquilidad de que, aunque se cortara el SSH, Seeker seguiría corriendo. Solo era cuestión de volver a conectar y hacer tmux attach.
 
-**Screenshoot tmux con tres paneles corriendo**
+<p align="center">
+  <img src="/assets/images/exp0x02/2_Tmux_3_paneles.png" />
+</p>
+
 
 #### 0x01. 3 Iniciando Seeker — paso a paso dentro de segfault + tmux
 
@@ -126,10 +133,14 @@ remote: Total 1636 (delta 266), reused 249 (delta 249), pack-reused 1324 (from 2
 Receiving objects: 100% (1636/1636), 3.95 MiB | 3.10 MiB/s, done.
 Resolving deltas: 100% (836/836), done.
 ```
+&nbsp;
 
 > Es posible que no te deje instalar si no has preparado la VM en segfault, si quieres puedes pasarle el `apt update`, `apt install python3 python3-pip curl` antes para que no te bote errores, mejor. 
 
-**Screenshot: seeker_clone_complete.png mostrando la salida del git clone y ls con la carpeta.**
+
+<p align="center">
+  <img src="/assets/images/exp0x02/3_Seeker_Clone_complete.png" />
+</p>
 
 2. **Luego de clonar el repo, te vas hasta el path donde está Seeker y lo instalas en la VM asi:**
 
@@ -138,22 +149,31 @@ cd seeker
 chmod +x install.sh
 ./install.sh
 ```
+&nbsp;
 
-**Screenshoot: seeker instalado**
+<p align="center">
+  <img src="/assets/images/exp0x02/4_Seeker_instalado.png" />
+</p>
+
 
 3. **Bien ahí. Ahora vamos a correr seeker desde la ventada de Tmux.**
 ```bash
 tmux new -s seeker
 ```
+&nbsp;
 Ya acá dentro corremos seeker con:
 ```bash
 python3 seeker.py
 ```
+&nbsp;
 
-Acá puedes seleccionar alguna opción: Google drive, Near You, WhatsApp, Telegram, etc. estos son los __templates__ que tiene Seeker por defecto, la idea es probarlos y recolecctar información. Cuando escogemos un template nos pedirá algunos datos como páginas de redirección o imágenes para grupos de WhatsApp, una vez configurado el template deberías ver logs en la consola indicando que el servidor arrancó y escucha en `http://127.0.0.1:8080` (o en el puerto que indique). Además, cuando llegan requests, verás entradas en tiempo real con IP/time/user-agent y, en caso de aceptar ubicación, lat/long.
+Aquí puedes seleccionar alguna opción: Google drive, Near You, WhatsApp, Telegram, etc. estos son los __templates__ que tiene Seeker por defecto, la idea es probarlos y recolecctar información. Cuando escogemos un template nos pedirá algunos datos como páginas de redirección o imágenes para grupos de WhatsApp, una vez configurado el template deberías ver logs en la consola indicando que el servidor arrancó y escucha en `http://127.0.0.1:8080` (o en el puerto que indique). Además, cuando llegan requests, verás entradas en tiempo real con IP/time/user-agent y, en caso de aceptar ubicación, lat/long.
 
 
-**Screenshoot seeker corriendo**
+<p align="center">
+  <img src="/assets/images/exp0x02/5_Seeker_corriendo.png" />
+</p>
+
 
 Con Seeker arrancando en `localhost:8080` ya tenemos el servicio listo localmente. Ahora el siguiente paso es hacer que esa instancia sea accesible desde afuera —no para “pescar gente”, sino para ver cómo se presenta una instancia real desde un navegador externo, analizar lasAcá puedes seleccionar alguna opción: Google drive, Near You, WhatsApp, Telegram, etc. peticiones y los metadatos que deja, y extraer rasgos reutilizables para búsquedas en Censys/Shodan. Para ello montamos un reverse tunnel que nos dará una URL pública HTTPS que usaremos únicamente como anzuelo de prueba en un entorno controlado.
 
@@ -172,6 +192,7 @@ En `tmux`, ya con el panel que está corriendo Seeker, abres el del tunel con `C
 ```bash
 ssh -R80:0:8080 -o StrictHostKeyChecking=accept-new nokey@localhost.run
 ```
+&nbsp;
 ¿Qué hace este comando?
 - `-R80:0:8080`: pide al servicio remoto abrir el puerto 80 y redirigirlo al `localhost:8080` de nuestra VM.
 - `nokey@localhost.run`: usuario “invitado” para crear el túnel.
@@ -179,7 +200,9 @@ ssh -R80:0:8080 -o StrictHostKeyChecking=accept-new nokey@localhost.run
 
 Qué deberías ver: una URL pública tipo https://randomsub.localhost.run que apunta directo a tu puerto local.
 
-*Screenshot: tunnel_url_localhostrun.png mostrando la URL*
+<p align="center">
+  <img src="/assets/images/exp0x02/6_Tunnel_URL_Localhostrun.png" />
+</p>
 
 Este metodo tiene algunos pros y contras, por un lado es super fácil de montar y no instala nada en la VM, pero puede ser que el servicio sea inestable y limitado, y también puede ser que cambie la url cada vez que la corres, pero nos funciona para el experimento, so vamos.
 
@@ -188,7 +211,10 @@ Este metodo tiene algunos pros y contras, por un lado es super fácil de montar 
 > - Panel B (derecha, arriba): túnel HTTPS (`localhost.run`).
 > - Panel C (derecha, abajo): logs / debugging (tcpdump, tail -f, etc.). Esta opción es muy útil para para ver más detalles del tráfico HTTP, headers o para depurar, pero ya sabes, es opcional.
 
-**Screenshot: tmux_layout.png con los 2 paneles visibles.**
+
+<p align="center">
+  <img src="/assets/images/exp0x02/7_tmux_layout.png" />
+</p>
 
 ##### Seeker listo
 
@@ -197,16 +223,22 @@ Seeker quedó montado y accesible vía la URL pública del túnel; en la sesión
 #### Pruebas
 Con el navegador del host si estás usando un perfil limpio, abre la URL pública, acá ya deberías ver la página de Seeker.
 
-**screenshot: browser_prompt_allow.png — prompt del navegador solicitando ubicación.**
+<p align="center">
+  <img src="/assets/images/exp0x02/8_Browser_solicitando_ubicacion.png" />
+</p>
 
 - Si aceptas ubicación → Seeker mostrará IP pública del cliente, user-agent, timestamp, coordenadas (lat, lon) y precisión en metros.
 
-**Screenshot — Seeker mostrando coords + ip + ua.**
+<p align="center">
+  <img src="/assets/images/exp0x02/9. Seeker_mostrando.png" />
+</p>
 
 - Si niegas ubicación → verás que no aparecen coordenadas, pero sí IP, user-agent y otros metadatos (headers). Esto confirma que aún sin permiso hay información valiosa..
 
-**Screenshot seeker_capture_deny.png — Seeker mostrando ip + ua pero sin coords.**
 
+<p align="center">
+  <img src="/assets/images/exp0x02/10_Seeker_mostrando_IP_sin coords.png" />
+</p>
 
 ##### De Seeker al hunting
 
@@ -233,6 +265,7 @@ Antes de empezar a buscar, una pausa breve. En este experimento **sí** vamos a 
 ```bash
 ssh -D 1080 -o "SetEnv SECRET=TuLlavESecreta" root@lsd.segfault.net
 ```
+&nbsp;
 
 **Comando (robusto, con keepalive):**
 
@@ -244,7 +277,7 @@ ssh -D 1080 \
   -o ServerAliveCountMax=3 \
   root@lsd.segfault.net
 ```
-
+&nbsp;
 * `-D 1080`: abre un SOCKS5 en `127.0.0.1:1080`.
 * Keepalive para que el túnel no se caiga en silencio.
 
@@ -263,6 +296,7 @@ ssh -D 1080 \
   ```
   network.proxy.socks_remote_dns = true
   ```
+  
 * **Chromium/Chrome**: usa un perfil exclusivo y define el proxy en las opciones del sistema o via línea de comando si lo necesitas, pero recuerda que **no todos los caminos** forzan DNS por SOCKS; si dudas, usa Firefox para esta parte.
 
 <p align="center">
@@ -293,7 +327,7 @@ Si quieres mirar/editar tráfico:
 ```bash
 gost -L=http://127.0.0.1:8081 -F=socks5://127.0.0.1:1080
 ```
-
+&nbsp;
 * `-L=http://127.0.0.1:8081` abre un **proxy HTTP** local en `:8081`.
 * `-F=socks5://127.0.0.1:1080` lo encadena al **SOCKS5** del SSH.
 
@@ -381,7 +415,7 @@ $ sha256sum favicon.ico
 4673c3ef82f32e37d0021d3683b5c132dbab0942e7137427fc9716235289c678  favicon.ico
 $   
 ```
-
+&nbsp;
 Con el hash listo, en **Censys** (https://search.censys.io/) buscamos así (usa el prefijo `sha256:` tal cual):
 
 ```text
@@ -427,6 +461,7 @@ Si prefieres correrlo a mano:
 ```text
 services.http.response.html_title="Are you a robot \?"
 ```
+&nbsp;
 
 (El campo `html_title` es buscable; Censys lo documenta y puedes usar comillas para coincidencia exacta).
 
@@ -441,7 +476,7 @@ Si tu hash devuelve **demasiados** sitios (incluidos legítimos), añade rasgos 
 ```text
 services.http.response.favicons.hashes="sha256:1e289014599c6f2946595fd9f744506d9656e14fe69625d91293bf92eb8dfa85" and services.http.response.headers: (key: `Connection` and value.headers: `close`)
 ```
-
+&nbsp;
 *(Los nombres exactos de los campos pueden variar por dataset; cópialos tal cual aparecen en la ficha del host).* 
 
 <p align="center">
@@ -471,12 +506,14 @@ $ grep "<title>" index_temp.html
   <title>Near You | Meet New People, Make New Friends</title>
 $
 ```
+&nbsp;
 
 Con el título validado, lo buscamos en Shodan tal cual:
 
 ```text
 http.title:"Near You | Meet New People, Make New Friends"
 ```
+&nbsp;
 
 Va a salir ruido. Normal: hay servicios inocentes que coinciden por texto. Lo que nos interesa es el host donde el título **calza literal** y, al abrir la ficha, encontramos el **puerto/servicio** donde corre Seeker.
 
@@ -671,6 +708,7 @@ Ahora corremos **MVT** apuntando a nuestro **STIX2** como fuente de IOCs. Depend
 ```bash
 mvt-android check-androidqf --iocs ~/entities-da64f522-c3e6-48c0-8262-190c5d90ea08.stix2  ~/androidqf/90eba9d5-95da-429b-8ea0-0e1df58e07dd
 ```
+&nbsp;
 
 Salida esperable (resumen): MVT detecta el **dominio** que documentamos en el caso (p. ej., el dominio en español), y—si tu feed lo incluye en STIX2 con relaciones—verás el indicador etiquetado con el **nombre/label** de la **Threat** asociada.
 
