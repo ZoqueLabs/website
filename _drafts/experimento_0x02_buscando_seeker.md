@@ -175,13 +175,13 @@ Aquí puedes seleccionar alguna opción: Google drive, Near You, WhatsApp, Teleg
 </p>
 
 
-Con Seeker arrancando en `localhost:8080` ya tenemos el servicio listo localmente. Ahora el siguiente paso es hacer que esa instancia sea accesible desde afuera —no para “pescar gente”, sino para ver cómo se presenta una instancia real desde un navegador externo, analizar lasAcá puedes seleccionar alguna opción: Google drive, Near You, WhatsApp, Telegram, etc. peticiones y los metadatos que deja, y extraer rasgos reutilizables para búsquedas en Censys/Shodan. Para ello montamos un reverse tunnel que nos dará una URL pública HTTPS que usaremos únicamente como anzuelo de prueba en un entorno controlado.
+Con Seeker arrancando en `localhost:8080` ya tenemos el servicio listo localmente. Ahora el siguiente paso es hacer que esa instancia sea accesible desde afuera —no para “pescar gente”, sino para ver cómo se presenta una instancia real desde un navegador externo, analizar las peticiones y los metadatos que deja, y extraer rasgos reutilizables para búsquedas en Censys/Shodan. Para ello montamos un reverse tunnel que nos dará una URL pública HTTPS que usaremos únicamente como anzuelo de prueba en un entorno controlado.
 
 #### 0x01. 4 Reverse tunnels (localhost.run)
 
 Los túneles reversos, crean un puente entre el puerto local de la VM y una URL pública en HTTPS; así exponemos el Seeker que ya está corriendo hacia afuera, solo para pruebas.
 
-En este experimento probamos una de las opciones que tiene repo de [The Hackers Choice](https://github.com/hackerschoice/thc-tips-tricks-hacks-cheat-sheet?tab=readme-ov-file#https), pero tu puedes experimentar con otras.
+En este experimento probamos una de las opciones que tiene el repo de [The Hackers Choice](https://github.com/hackerschoice/thc-tips-tricks-hacks-cheat-sheet?tab=readme-ov-file#https), pero tu puedes experimentar con otras.
 
 🔹 **`localhost.run` con SSH**
 
@@ -204,7 +204,7 @@ Qué deberías ver: una URL pública tipo https://randomsub.localhost.run que ap
   <img src="/assets/images/exp0x02/6_Tunnel_URL_Localhostrun.png" />
 </p>
 
-Este metodo tiene algunos pros y contras, por un lado es super fácil de montar y no instala nada en la VM, pero puede ser que el servicio sea inestable y limitado, y también puede ser que cambie la url cada vez que la corres, pero nos funciona para el experimento, so vamos.
+Este metodo tiene algunos pros y contras, por un lado es super fácil de montar y no instala nada en la VM, pero puede ser que el servicio sea inestable y limitado, y también puede ser que cambie la url cada vez que la corres, pero nos funciona para el experimento, asi que vamos.
 
 > Layout recomendado para `tmux`:
 > - Panel A (izquierda, grande): Seeker (servidor local).
@@ -230,7 +230,7 @@ Con el navegador del host si estás usando un perfil limpio, abre la URL públic
 - Si aceptas ubicación → Seeker mostrará IP pública del cliente, user-agent, timestamp, coordenadas (lat, lon) y precisión en metros.
 
 <p align="center">
-  <img src="/assets/images/exp0x02/9. Seeker_mostrando.png" />
+  <img src="/assets/images/exp0x02/9_Seeker_mostrando.png" />
 </p>
 
 - Si niegas ubicación → verás que no aparecen coordenadas, pero sí IP, user-agent y otros metadatos (headers). Esto confirma que aún sin permiso hay información valiosa..
@@ -554,7 +554,7 @@ Aquí es donde deja de ser “buscar cadenas” y empieza la inteligencia de ver
 
 ---
 
-Cerramos con la misma invitación de siempre: esto apenas araña la superficie de lo que permiten Censys y Shodan. No venimos a inventar nada: venimos a mostrar **cómo lo estamos haciendo mientras aprendemos**. Lo que esperamos es que pique la curiosidad y se sumen ojos. Los adversarios juegan en serio; nos toca responder igual.
+Cerramos con la misma invitación de siempre: esto apenas araña la superficie de lo que permiten Censys y Shodan. No venimos a inventar nada: venimos a mostrar **cómo lo estamos haciendo mientras aprendemos**. Lo que esperamos es que pique la curiosidad y se sumen ojos. Lxs adversarixs juegan en serio; nos toca responder igual.
 
 ---
 
