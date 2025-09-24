@@ -125,7 +125,6 @@ Esto nos dio la tranquilidad de que, aunque se cortara el SSH, Seeker seguiría 
 <p align="center">
   <img src="/assets/images/exp0x02/2_Tmux_3_paneles.png" />
 </p>
-
 ---
 
 ### 0x01.3 Iniciando Seeker — paso a paso dentro de segfault + tmux
@@ -372,7 +371,6 @@ Usa las herramientas del emulador para **fijar coordenadas** y probar cómo Seek
 <p align="center">
   <img src="/assets/images/exp0x02/changed_location_android.png" />
 </p>
-
 ---
 
 ### 0x02.4 Diagrama (dos ramas, clarito)
@@ -451,7 +449,6 @@ Ese campo existe y acepta “`sha256:<hex>`” como valor; si dudas, abre cualqu
 <p align="center">
   <img src="/assets/images/exp0x02/censys_resultados_favicon_captcha.png" />
 </p>
-
 ---
 
 #### 0x03.1.1 Lo que vimos en el primer tiro
@@ -727,7 +724,6 @@ curl -H "X-Colander-Feed: Secret XxxXxXXXxX" \
 <p align="center">
   <img src="/assets/images/exp0x02/feed-download-stix2.png" />
 </p>
-
 ---
 
 ### 0x05.3 Pasar MVT con esos IOCs (androidqf del emulador)
