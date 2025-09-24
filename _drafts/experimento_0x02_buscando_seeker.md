@@ -26,15 +26,15 @@ lang: es
 
 ¡Saludos, gente!
 
-En ZoqueLabs nos encanta la inteligencia de amenazas, y este es nuestro primer *write-up* sobre el tema. Después de meternos a fondo en [las tripas de Android](https://linkalarticulo), cambiamos de aire para oler un poco de TCP/IP y arrancar un experimento básico pero potente: aprender a buscar y rastrear infraestructura maliciosa.
+En ZoqueLabs nos encanta la inteligencia de amenazas, y este es nuestro primer *write-up* sobre el tema. Después de meternos a fondo en [las tripas de Android](https://zoquelabs.xyz/android/forense/exploit/2025/06/05/Escribiendo-exploit-Android-MVT.html), cambiamos de aire para oler un poco de TCP/IP y arrancar un experimento básico pero potente: aprender a buscar y rastrear infraestructura maliciosa.
 
 El punto de partida fue este artículo: [Seeker: How a Simple Link Can Reveal Your Smartphone’s Location](https://www.mobile-hacker.com/2025/06/10/seeker-how-a-simple-link-can-reveal-your-smartphones-location/). A partir de ahí planteamos el objetivo: encontrar instancias de **Seeker**, documentarlas y generar indicadores de compromiso reutilizables y compartibles.
 
-Primero jugamos con Seeker (ya explicaremos qué es y cómo funciona) usando servidores temporales y gratuitos de *segfault* —un servicio de [The Hackers Choice](https://thc.org)— y, de paso, aprendimos a usar esos mismos servidores como *proxies* para asomarnos con más seguridad a la infraestructura que íbamos hallando. Todo ese recorrido está documentado aquí, con una sección dedicada a OpSec aplicable a este y a muchos otros casos en los que haya que tocar infraestructura maliciosa.
+Primero jugamos con Seeker (ya explicaremos qué es y cómo funciona) usando servidores temporales y gratuitos de *segfault* — un servicio de [The Hackers Choice](https://www.thc.org/segfault/) — y, de paso, aprendimos a usar esos mismos servidores como *proxies* para asomarnos con más seguridad a la infraestructura que íbamos hallando. Todo ese recorrido está documentado aquí, con una sección dedicada a OpSec aplicable a este y a muchos otros casos en los que haya que tocar infraestructura maliciosa.
 
 La cacería la hicimos con **Censys** y **Shodan** (versiones gratuitas). Piensa en Google, pero en vez de páginas, devuelven metadatos que delatan servicios y dispositivos conectados: justo lo que necesitamos para perfilar objetivos.
 
-Claro: detectar no alcanza si no podemos compartir. Por eso organizamos, clasificamos y normalizamos la información para que sirva a organizaciones hermanas. Con la experiencia previa en [Colander](https://) —software libre para gestión de casos—, montamos el caso ahí y aprovechamos funciones que nos ayudan a convertir datos en **inteligencia accionable**. Además, activamos **feeds** para exportar reglas STIX2 que luego pueden consumirse en MVT.
+Claro: detectar no alcanza si no podemos compartir. Por eso organizamos, clasificamos y normalizamos la información para que sirva a organizaciones hermanas. Con la experiencia previa en [Colander](https://pts-project.org/colander-companion/) — software libre para gestión de casos —, montamos el caso y aprovechamos funciones que nos ayudan a convertir datos en **inteligencia accionable**. Además, activamos **feeds** para exportar reglas STIX2 que luego pueden consumirse en MVT.
 
 Este escrito viene cargado: herramientas de hackeo, rastreo de infraestructura, VMs efímeras, túneles, *proxies*, IOCs, Colander, MVT, OpSec y, sí, ¡todo al gratín! Así que vayan limpiando sus terminales: las vamos a ensuciar. ¡Vamos!
 
@@ -55,12 +55,14 @@ Luego, en la mayoría de los casos, seeker redirecciona a la víctima a una pág
 
 Todo se almacena y se muestra en tiempo real desde la terminal. Sin embargo, en nuestra investigación, nos fijamos que incluso si el navegador por default le niega la geolocalización a Seeker, este igual recolecta información sensble como: IP pública, navegador, sistema operativo, tipo de dispositivo, etc. A esto nos referimos cuando hablamos de mantener un buen opsec durante la búsqueda, para no entregar información que nos pueda identificar. 
 
-Y acá es donde Seeker se vuelve relevante: es simple y funciona, y eso basta para demostrar que la ingeniería social sigue siendo efectiva. Sabemos que muchas campañas maliciosas, especialmente en América Latina, usan tácticas muy parecidas: un enlace, una web clonada, y el navegador haciendo el resto. Aprender cómo opera Seeker permite ver el ataque desde adentro, entender cómo se mueve, reproducirlo en entornos controlados y empezar a reconocer patrones que podrían pasar desapercibidos en un primer análisis. EN LOS LOGS SI SALE LA INFORMACION COMPLETA DEL CLIENTE WEB INCLUSO SI LA PERSONA NO HA INTERACTUADO CON EL SITIO.
+Y acá es donde Seeker se vuelve relevante: es simple y funciona, y eso basta para demostrar que la ingeniería social sigue siendo efectiva. Sabemos que muchas campañas maliciosas, especialmente en América Latina, usan tácticas muy parecidas: un enlace, una web clonada, y el navegador haciendo el resto. Aprender cómo opera Seeker permite ver el ataque desde adentro, entender cómo se mueve, reproducirlo en entornos controlados y empezar a reconocer patrones que podrían pasar desapercibidos en un primer análisis. Ten presente que en los logs si sale la informacion completa del cliente web.
 
 Bueno sin más preambulo, ahora si vamos a correr Seeker.
 
+
 ### 0x01. 2 Correr Seeker
-Antes de correrlo, recomendamos hacerlo siempre desde un entorno controlado: una máquina virtual, un contenedor o una infraestructura aislada. No solo por seguridad, sino para evitar filtrar info sin querer. Nosotres decidimos usar uno de los servidores temporales y gratuitos de _segfault_ de [The Hackers Choice](https://thc.org). 
+Antes de correrlo, recomendamos hacerlo siempre desde un entorno controlado: una máquina virtual, un contenedor o una infraestructura aislada. No solo por seguridad, sino para evitar filtrar info sin querer. Nosotres decidimos usar uno de los servidores temporales y gratuitos de _segfault_ de [The Hackers Choice](https://www.thc.org/segfault/). 
+---
 
 #### 0x01. 2.1 Segfault
 
@@ -85,6 +87,7 @@ Notas, problemas tipicos y fix:
 <p align="center">
   <img src="/assets/images/exp0x02/1_Conectando_Segfault.png" />
 </p>
+---
 
 #### 0x01. 2.2 Tmux - mantener vivo a Seeker
 
@@ -113,11 +116,11 @@ Esto nos dio la tranquilidad de que, aunque se cortara el SSH, Seeker seguiría 
 </p>
 
 
-#### 0x01. 3 Iniciando Seeker — paso a paso dentro de segfault + tmux
+### 0x01. 3 Iniciando Seeker — paso a paso dentro de segfault + tmux
 
 Con todo esto listo ahora si a lo que vinimos vamos.
 
-1. **Clonar el repo**: Dentro de segfault vamos a instalar seeker desde el repositorio oficial en [github](https://github.com/thewhiteh4t/seeker), con el siguiente comando:
+** 1. Clonar el repo**: Dentro de segfault vamos a instalar seeker desde el repositorio oficial en [github](https://github.com/thewhiteh4t/seeker), con el siguiente comando:
 ```bash
 git clone https://github.com/thewhiteh4t/seeker.git
 ```
@@ -135,14 +138,14 @@ Resolving deltas: 100% (836/836), done.
 ```
 &nbsp;
 
-> Es posible que no te deje instalar si no has preparado la VM en segfault, si quieres puedes pasarle el `apt update`, `apt install python3 python3-pip curl` antes para que no te bote errores, mejor. 
+> Es posible que no te deje instalar si no has preparado la VM en segfault, si quieres puedes pasarle antes el `apt update`, `apt install python3 python3-pip curl` para que no te bote errores. 
 
 
 <p align="center">
   <img src="/assets/images/exp0x02/3_Seeker_Clone_complete.png" />
 </p>
 
-2. **Luego de clonar el repo, te vas hasta el path donde está Seeker y lo instalas en la VM asi:**
+** 2. Ahora, ve al path donde está Seeker y lo instalas en la VM así:**
 
 ```bash
 cd seeker
@@ -156,7 +159,7 @@ chmod +x install.sh
 </p>
 
 
-3. **Bien ahí. Ahora vamos a correr seeker desde la ventada de Tmux.**
+** 3. Bien ahí. Ahora vamos a correr seeker desde la ventada de `tmux`.**
 ```bash
 tmux new -s seeker
 ```
@@ -175,9 +178,9 @@ Aquí puedes seleccionar alguna opción: Google drive, Near You, WhatsApp, Teleg
 </p>
 
 
-Con Seeker arrancando en `localhost:8080` ya tenemos el servicio listo localmente. Ahora el siguiente paso es hacer que esa instancia sea accesible desde afuera —no para “pescar gente”, sino para ver cómo se presenta una instancia real desde un navegador externo, analizar las peticiones y los metadatos que deja, y extraer rasgos reutilizables para búsquedas en Censys/Shodan. Para ello montamos un reverse tunnel que nos dará una URL pública HTTPS que usaremos únicamente como anzuelo de prueba en un entorno controlado.
+Con Seeker arrancando en `localhost:8080` ya tenemos el servicio listo localmente. Ahora el siguiente paso es hacer que esa instancia sea accesible desde afuera, no para “pescar gente”, sino para ver cómo se presenta una instancia real desde un navegador externo, analizar las peticiones y los metadatos que deja, y extraer rasgos reutilizables para búsquedas en Censys/Shodan. Para ello montamos un __reverse tunnel__ que nos dará una URL pública HTTPS que usaremos únicamente como anzuelo de prueba en un entorno controlado.
 
-#### 0x01. 4 Reverse tunnels (localhost.run)
+### 0x01. 4 Reverse tunnels (localhost.run)
 
 Los túneles reversos, crean un puente entre el puerto local de la VM y una URL pública en HTTPS; así exponemos el Seeker que ya está corriendo hacia afuera, solo para pruebas.
 
@@ -204,7 +207,7 @@ Qué deberías ver: una URL pública tipo https://randomsub.localhost.run que ap
   <img src="/assets/images/exp0x02/6_Tunnel_URL_Localhostrun.png" />
 </p>
 
-Este metodo tiene algunos pros y contras, por un lado es super fácil de montar y no instala nada en la VM, pero puede ser que el servicio sea inestable y limitado, y también puede ser que cambie la url cada vez que la corres, pero nos funciona para el experimento, asi que vamos.
+Este metodo tiene algunos pros y contras, por un lado es super fácil de montar y no instala nada en la VM, pero puede ser que el servicio sea inestable y limitado, y también puede ser que cambie la URL cada vez que la corres, pero nos funciona para el experimento, asi que vamos.
 
 > Layout recomendado para `tmux`:
 > - Panel A (izquierda, grande): Seeker (servidor local).
@@ -216,10 +219,10 @@ Este metodo tiene algunos pros y contras, por un lado es super fácil de montar 
   <img src="/assets/images/exp0x02/7_tmux_layout.png" />
 </p>
 
-##### Seeker listo
+### 0x01 5 Seeker listo
 
 Seeker quedó montado y accesible vía la URL pública del túnel; en la sesión de tmux dejamos el panel A con Seeker y el panel B con el túnel HTTPS. Con la URL ya podemos abrir la instancia desde un navegador limpio o un emulador y ver en vivo qué captura la plantilla (coords si aceptan, o metadata si niegan).
-
+---
 #### Pruebas
 Con el navegador del host si estás usando un perfil limpio, abre la URL pública, acá ya deberías ver la página de Seeker.
 
@@ -227,7 +230,7 @@ Con el navegador del host si estás usando un perfil limpio, abre la URL públic
   <img src="/assets/images/exp0x02/8_Browser_solicitando_ubicacion.png" />
 </p>
 
-- Si aceptas ubicación → Seeker mostrará IP pública del cliente, user-agent, timestamp, coordenadas (lat, lon) y precisión en metros.
+- Si aceptas ubicación → Seeker mostrará IP pública del cliente, *user-agent*, *timestamp*, coordenadas (lat, lon) y precisión en metros.
 
 <p align="center">
   <img src="/assets/images/exp0x02/9_Seeker_mostrando.png" />
@@ -239,19 +242,19 @@ Con el navegador del host si estás usando un perfil limpio, abre la URL públic
 <p align="center">
   <img src="/assets/images/exp0x02/10_Seeker_mostrando_IP_sin coords.png" />
 </p>
+---
+#### De Seeker al hunting
 
-##### De Seeker al hunting
+Ver que Seeker funciona es solo el primer paso. Lo que realmente nos interesa es sacar huellas que podamos reusar para cazar otras instancias: el favicon (`/favicon.ico`) actúa como un mini-fingerprint para correlación; el `HTML title` suele delatar plantillas enteras; **los headers / banners HTTP** (Server, Connection, redirecciones) ayudan a filtrar ruido y agrupar hosts hermanados; las rutas y plantillas (JS/CSS, paths estáticos) son huellas que se repiten y dejan rastros como migas de pan; y el combo certificados/TLS + IP/ASN nos da contexto de hosting y posibles clusters operativos. Con estos artefactos armamos queries en Censys/Shodan y documentamos todo en Colander para generar IOCs listos para exportar —esto es investigación práctica, no curiosidad casual-. 
 
-Ver que Seeker funciona es solo el primer paso. Lo que realmente nos interesa es sacar huellas que podamos reusar para cazar otras instancias: el favicon (`/favicon.ico`) actúa como un mini-fingerprint para correlación; el `HTML title` suele delatar plantillas enteras; **los headers / banners HTTP** (Server, Connection, redirecciones) ayudan a filtrar ruido y agrupar hosts hermanados; las rutas y plantillas (JS/CSS, paths estáticos) son pistas que se repiten como migas de pan; y el combo certificados/TLS + IP/ASN nos da contexto de hosting y posibles clusters operativos. Con estos artefactos armamos queries en Censys/Shodan y documentamos todo en Colander para generar IOCs listos para exportar —esto es investigación práctica, no curiosidad casual.
-
-Ahora sí: manos a la obra — primero nos vamos con OpSec y luego a lo divertido, el mapeo.
+Ahora sí: manos a la obra, primero nos vamos con OpSec y luego a lo divertido, el mapeo.
 
 
 ## --[ 0x02 OpSec ]--
 
-Antes de empezar a buscar, una pausa breve. En este experimento **sí** vamos a toparnos con infraestructura maliciosa y queremos estar listxs para **interactuar con ella sin regalar datos o metadatos del lab**. Nuestra receta mínima es directa y funciona: **sacamos todo por segfault (THC) usando un SOCKS5 via SSH** y trabajamos con un **navegador dedicado con perfil limpio**. Si necesitamos “parecer” un teléfono, encadenamos un **proxy HTTP** con `gost` para que un **emulador Android** use la misma salida. Es simple, chévere y nos sirve de plantilla para futuros experimentos.
+Antes de empezar a buscar, una pausa breve. En este experimento **sí** vamos a toparnos con infraestructura maliciosa y queremos estar listxs para **interactuar con ella sin regalar datos o metadatos del lab**. Nuestra receta mínima es: **sacamos todo por segfault (THC) usando un SOCKS5 via SSH** y trabajamos con un **navegador dedicado con perfil limpio**. Si necesitamos “parecer” un teléfono, encadenamos un **proxy HTTP** con `gost` para que un **emulador Android** use la misma salida. Es simple, chévere y nos sirve de plantilla para futuros experimentos.
 
-> No es la única forma. Además, en nuestro caso usamos una VM **prestada**: no controlamos qué se registra o monitorea allí, así que para experimentos con infraestructura más **peligrosa** esta configuración podría quedarse corta. La regla es simple: haz siempre una **evaluación de riesgo** —qué podría ver un tercero y si te importa que lo vea— y decide en consecuencia. Existen rutas alternativas (VPN, Tor, contenedores, VMs desechables, etc.); elegimos esta porque es **rápida de montar** y **fácil de reutilizar**.
+> No es la única forma. Además, en nuestro caso usamos una VM **prestada**: no controlamos qué se registra o monitorea allí, así que para experimentos con infraestructura más **peligrosa** esta configuración podría quedarse corta, así que haz siempre una **evaluación de riesgo** —qué podría ver un tercero y si te importa que lo vea— y decide en consecuencia. Existen rutas alternativas (VPN, Tor, contenedores, VMs desechables, etc.); elegimos esta porque es **rápida de montar** y **fácil de reutilizar**.
 
 
 ---
@@ -290,21 +293,21 @@ ssh -D 1080 \
 
 **Idea:** usar un navegador “limpio” (nuevo perfil, sin cookies/ extensiones personales) y apuntarlo al **SOCKS5** del paso anterior. Importante: activar **DNS por el proxy** para evitar fugas.
 
-* **Firefox**: Preferencias → Red → Configurar → **SOCKS5** `127.0.0.1` puerto `1080`.
+- **Firefox**: Preferencias → Red → Configurar → **SOCKS5** `127.0.0.1` puerto `1080`.
   En `about:config` activa:
 
   ```
   network.proxy.socks_remote_dns = true
   ```
   
-* **Chromium/Chrome**: usa un perfil exclusivo y define el proxy en las opciones del sistema o via línea de comando si lo necesitas, pero recuerda que **no todos los caminos** forzan DNS por SOCKS; si dudas, usa Firefox para esta parte.
+- **Chromium/Chrome**: usa un perfil exclusivo y define el proxy en las opciones del sistema o vía línea de comando si lo necesitas, pero recuerda que no todos los caminos forzan DNS por SOCKS; si dudas, usa Firefox para esta parte.
 
 <p align="center">
   <img src="/assets/images/exp0x02/conf_socks5_ff.png" />
 </p>
 
 
-> Tip rápido de huella: idioma y zona horaria del navegador deberían ser coherentes con tu estrategia. Si no necesitas nada fancy, déjalo simple y consistente.
+> Tip rápido de huella: idioma y zona horaria del navegador deberían ser coherentes con tu estrategia. Si no necesitas nada fancy, déjalo así.
 
 **(Opcional) Interceptar con ZAP/Burp**
 Si quieres mirar/editar tráfico:
@@ -330,8 +333,6 @@ gost -L=http://127.0.0.1:8081 -F=socks5://127.0.0.1:1080
 &nbsp;
 * `-L=http://127.0.0.1:8081` abre un **proxy HTTP** local en `:8081`.
 * `-F=socks5://127.0.0.1:1080` lo encadena al **SOCKS5** del SSH.
-
-\[📸 **Screenshot sugerido**: terminal con `gost` escuchando en `:8081`.]
 
 **Emulador Android (AVD)**
 Configura **Wi-Fi → Proxy manual**:
@@ -374,11 +375,11 @@ Usa las herramientas del emulador para **fijar coordenadas** y probar cómo Seek
                 Infraestructura Seeker
 ```
 
----
+
 
 ### Notas de cierre
 
-* Con esta cadena, **todo** sale por segfault; tu red del lab no asoma la cabeza.
+* Con esta cadena, *todo* sale por segfault; tu red del lab no asoma la cabeza.
 * El navegador dedicado evita mezclar cookies/ extensiones/ idioma/zona de tu día a día.
 * La rama móvil con `gost` te deja probar “como teléfono” sin exponer el host y con ubicación simulada. **Es nuestra recomendación para este experimento.**
 * Si tu caso pide otra cosa (VMs, Tor, VPN), cámbiala sin pena. **Esta es nuestra recomendación base** porque es corta, práctica y reusable para lo que viene.
@@ -389,11 +390,11 @@ Usa las herramientas del emulador para **fijar coordenadas** y probar cómo Seek
 
 Antes de ponernos a hurgar, el mapa del terreno. **Censys** y **Shodan** no “leen” páginas como un buscador normal: indexan **metadatos de servicios** (banners, headers, certificados, títulos HTML, favicons…). Por eso nos sirven tanto aquí: **Seeker** recicla plantillas con **favicons** y **títulos** muy reconocibles; si pescas uno, es común que salgan varios más. Para consultas finas, Censys expone un lenguaje de búsqueda a nivel de campos (CenQL) y, sí, puedes filtrar por *favicons.hashes* o *html\_title*; Shodan tiene su propia sintaxis.
 
-### Acceso y “capas” (para que no te estrelles)
+### Niveles de acceso
 
 * **Sin cuenta**: curioseas poco.
 * **Cuenta gratuita**: más resultados, pero con **créditos** y límites visibles (abrir páginas extra, usar API, etc.). 
-* **De pago**: cuotas mucho más amplias y, sobre todo, **históricos**: ver “cuándo” se observó algo, comparar estados en el tiempo, etc. (útil para correlacionar campañas). Aquí **no** usaremos históricos pagos, pero existen y son oro en investigaciones largas. Para Shodan, el acceso también va por **créditos de consulta** (filtros, paginar… gastan). 
+* **De pago**: cuotas mucho más amplias y, sobre todo, **históricos**: ver “cuándo” se observó algo, comparar estados en el tiempo, etc. (útil para correlacionar campañas). Aquí no usaremos históricos pagos, pero existen y son oro en investigaciones largas. Para Shodan, el acceso también va por **créditos de consulta** (filtros, paginar… gastan). 
 
 > Mini-tip: en Shodan, el filtro por favicon *no* usa SHA-256; usa **MurmurHash3 (mmh3)** sobre el favicon. No mezcles los hashers o te frustras.
 
@@ -401,7 +402,7 @@ Antes de ponernos a hurgar, el mapa del terreno. **Censys** y **Shodan** no “l
 
 ### 0x03.1 Punto de partida: **favicon** del template reCAPTCHA (con Censys)
 
-Vamos a empezar por lo pequeño que deja pista grande: el **favicon** del template de **Google reCAPTCHA** en Seeker. La idea es sacar el **SHA-256** del favicon del template y buscarlo en Censys (sin cuenta).
+Vamos a empezar por lo pequeño que deja una pista grande: el **favicon** del template de **Google reCAPTCHA** en Seeker. La idea es sacar el **SHA-256** del favicon del template y buscarlo en Censys (sin cuenta).
 
 > **¿Qué es un favicon?**
 El *favicon* es el iconito que ves en la pestaña del navegador y en los marcadores. Técnicamente es un archivo pequeño (ICO/PNG/SVG) que el sitio sirve (típicamente `/favicon.ico` o referenciado en el `<head>`). Como muchas plantillas reutilizan el mismo favicon, su **hash** se vuelve un “mini-fingerprint” fácil de buscar y correlacionar entre instancias (ideal para cazar infra reciclada como la de Seeker).
@@ -432,25 +433,25 @@ services.http.response.favicons.hashes="sha256:4673c3ef82f32e37d0021d3683b5c132d
 
 #### 0x03.1.1 Lo que vimos en el primer tiro
 
-Con esa búsqueda nos salieron varias **instancias**. En una de ellas (la que usaremos como ejemplo) Censys mostraba que el servicio de Seeker **se observó por última vez** el **4 de septiembre de 2025**, mientras que otros servicios del mismo host **siguen activos** al momento de escribir esto (10 días después). Ese contraste temporal es justo el tipo de pista que ayuda a entender si **apagaron**, **cambiaron** o **ajustaron** algo.
+Con esa búsqueda nos salieron varias **instancias**. En una de ellas (la que usaremos como ejemplo) Censys mostraba que el servicio de Seeker se observó por última vez el **4 de septiembre de 2025**, mientras que otros servicios del mismo host siguen activos al momento de escribir esto (10 días después). Ese contraste temporal es justo el tipo de pista que ayuda a entender si **apagaron**, **cambiaron** o **ajustaron** algo.
 
 <p align="center">
   <img src="/assets/images/exp0x02/censys_vista_host_last_seen.png" />
 </p>
 
-En esa misma ficha aparecían **dos dominios** asociados. Uno de ellos —**`canal.denuncias.me`**— nos interesa especialmente por el contexto hispano. Tomamos nota (IP, dominios, ASN, puertos, cualquier **redirección** que veas en la respuesta HTTP). La organización de esos datos la dejamos para el próximo capítulo.
+En esa misma ficha aparecían **dos dominios** asociados. Uno de ellos —**`canal.denuncias.me`**— nos interesa especialmente por el contexto hispano. Tomamos nota (IP, dominios, ASN, puertos, cualquier redirección que veas en la respuesta HTTP). La organización de esos datos la dejamos para el próximo capítulo.
 
 ---
 
 #### 0x03.1.2 Pivot **sin perder el hilo**: del favicon al **título** (reCAPTCHA)
 
-A veces el favicon desaparece (o nunca estuvo) y el hash ya no te sirve. No pasa nada: **cambiamos de pista**.
+Cuando el favicon no está (o desaparece), el hash deja de servir. Ahí toca cambiar de pista: el título HTML.
 
-1. En la **ficha del servicio** donde vimos Seeker, haz clic en **“View all data”**.
-2. En la tabla, busca el **título HTML** (debería verse así):
+1. En la **ficha del servicio** de Seeker, haz clic en **“View all data”**.
+2. En la tabla, ubica el campo `html_title` (debería verse así):
    `services.http.response.html_title = "Are you a robot ?"`
-3. A la **izquierda** de ese valor hay una **lupita**. Haz clic: Censys te arma una búsqueda por **ese mismo título** en todo su dataset.
-4. Ejecuta. Verás **otra instancia** de Seeker reCAPTCHA. Esta **no** apareció con el método del favicon porque **no tiene favicon** (o se lo quitaron), pero el **título** la delata.
+3. A la izquierda de ese valor hay una **lupita**. Haz clic y Censys te armará una búsqueda por ese mismo título en todo su dataset.
+4. Ejecuta. Aparecerá otra instancia de Seeker reCAPTCHA. Esta no salió con el favicon porque no tiene (o se lo borraron), pero el título la delata.
 
 <p align="center">
   <img src="/assets/images/exp0x02/censys_lupita.png" />
@@ -465,13 +466,13 @@ services.http.response.html_title="Are you a robot \?"
 
 (El campo `html_title` es buscable; Censys lo documenta y puedes usar comillas para coincidencia exacta).
 
-> Nota de proceso (transparente): en nuestra corrida original vimos primero el host “B” por favicon; al revalidar para el write-up **ya no salía por favicon** y el favicon **no estaba**. Con históricos pagos podríamos cotejarlo. Lo dejamos como **hipótesis razonable**, no como certeza.
+> Nota metodológica: En nuestra corrida inicial encontramos el host “B” por favicon. Al revalidar para este write-up ya no aparecía: el favicon había desaparecido. Con históricos pagos podríamos cotejar el cambio en el tiempo. Lo dejamos como una hipótesis razonable, no como certeza.
 
 ---
 
 #### 0x03.1.3 Afinar (cuando el favicon “se repite demasiado”)
 
-Si tu hash devuelve **demasiados** sitios (incluidos legítimos), añade rasgos que *tú mismo* hayas observado en instancias reales: headers, título, paths típicos. Por ejemplo, cuando buscamos instancias del template de Google Drive encontramos no solo instancias de Seeker sino otras que hacen ruido en los resultados. En nuestro caso hemos observado que las instancias de Seeker el header "Connection" de la respuesta siempre esta en "close". la mayoría de los hosts que nos son Seeker normalmente tienen este header en "keep-alive". Combinar **favicon + header** conocido puede acotar la búsqueda a _solo Seeker_:
+Si tu hash devuelve demasiados sitios (incluidos legítimos), añade rasgos que hayas observado en instancias reales: headers, título, paths típicos. Por ejemplo, cuando buscamos instancias del template de Google Drive encontramos no solo instancias de Seeker sino otras que hacen ruido en los resultados. En nuestro caso, hemos observado que en las instancias de Seeker el header "Connection" de la respuesta siempre esta en "close". La mayoría de los hosts que no son Seeker, normalmente tienen este header en "keep-alive". Combinar **favicon + header** conocido puede acotar la búsqueda a _solo Seeker_:
 
 ```text
 services.http.response.favicons.hashes="sha256:1e289014599c6f2946595fd9f744506d9656e14fe69625d91293bf92eb8dfa85" and services.http.response.headers: (key: `Connection` and value.headers: `close`)
@@ -484,15 +485,15 @@ services.http.response.favicons.hashes="sha256:1e289014599c6f2946595fd9f744506d9
 </p>
 ---
 
-#### 0x03.1.4 Qué guardar mientras cazas (y por qué)
+#### 0x03.1.4 ¿Qué guardar mientras cazas y por qué?
 
-Cada match te da piezas: **IP, dominios, ASN, puertos**, **título**, **redirecciones**, geografía. Con eso puedes **contextualizar**: ¿dónde está el servidor?, ¿qué cadena/título sugiere la plantilla?, ¿apunta a alguna puerta de entrada concreta? Así se levantan hipótesis de **campañas** o se reconocen IOCs que valen para más países (en nuestro ejemplo, el dominio en español es un IOC de interés regional).
+Cada match te da piezas: **IP, dominios, ASN, puertos**, **título**, **redirecciones**, geografía. Con eso puedes contextualizar: ¿dónde está el servidor?, ¿qué cadena/título sugiere la plantilla?, ¿apunta a alguna puerta de entrada concreta? Así se levantan hipótesis de **campañas** o se reconocen IOCs que valen para más países (en nuestro ejemplo, el dominio en español es un IOC de interés regional).
 
 ---
 
 ### 0x03.2 A la caza (segunda parte: Shodan, “Near You” sin favicon)
 
-Seguimos con la misma lógica pero ahora del lado de **Shodan** que esta vez usaremos con un usuario registrado pero sin pagar. No vamos a re-explicar la herramienta: directo al grano con el template **“Near You”** de Seeker. Este bicho es minimalista (arranca sin pedir imágenes ni datos extra), finge ser un servicio “basado en tu ubicación” —lo justo para tentar a la víctima a autorizar geolocalización— y, clave para nosotros, **no trae favicon**. Así que entramos por **título**.
+Seguimos con la misma lógica pero ahora del lado de **Shodan** que esta vez usaremos con un usuario registrado pero sin pagar. No vamos a re-explicar la herramienta: directo al grano con el template **“Near You”** de Seeker. Este bicho es minimalista (arranca sin pedir imágenes ni datos extra), finge ser un servicio “basado en tu ubicación” —lo justo para tentar a la víctima a autorizar geolocalización— y, clave para nosotros porque no trae favicon. Así que entramos por **título**.
 
 #### Sacar el título del template (una vez, desde código)
 
@@ -515,7 +516,7 @@ http.title:"Near You | Meet New People, Make New Friends"
 ```
 &nbsp;
 
-Va a salir ruido. Normal: hay servicios inocentes que coinciden por texto. Lo que nos interesa es el host donde el título **calza literal** y, al abrir la ficha, encontramos el **puerto/servicio** donde corre Seeker.
+Va a salir ruido, es normal, hay servicios inocentes que coinciden por texto. Lo que nos interesa es el host donde el título **calza literal** y, al abrir la ficha, encontramos el **puerto/servicio** donde corre Seeker.
 
 <p align="center">
   <img src="/assets/images/exp0x02/shodan_initial_results_by_title_string.png" />
@@ -527,7 +528,7 @@ Va a salir ruido. Normal: hay servicios inocentes que coinciden por texto. Lo qu
 
 #### 0x03.2.1 Pivot limpio dentro de Shodan
 
-Arriba del bloque del servicio verás un **badge verde**. Haz clic: se despliegan varios **hashes** calculados por Shodan para ese banner. El que nos interesa es **`http.title_hash`**. Haz clic en ese hash: Shodan te arma automáticamente una búsqueda filtrada por ese fingerprint de título. Resultado: te quedas **solo** con páginas que comparten ese título —ahí aparece **otra instancia de Seeker “Near You”**— y, de ñapa, **otra muy sospechosa** que pinta a phishing de otra familia.
+Arriba del bloque del servicio verás un **badge verde**. Haz clic ahí y se despliegan varios **hashes** calculados por Shodan para ese banner. El que nos interesa es **`http.title_hash`**. Haz clic en ese hash, ahora Shodan te arma automáticamente una búsqueda filtrada por ese fingerprint de título. Resultado: te quedas solo con páginas que comparten ese título —ahí aparece **otra instancia de Seeker “Near You”**— y, de ñapa, **otra muy sospechosa** que parece phishing de otra familia.
 
 <p align="center">
   <img src="/assets/images/exp0x02/shodan_showing_hashes.png" />
@@ -537,24 +538,24 @@ Arriba del bloque del servicio verás un **badge verde**. Haz clic: se despliega
   <img src="/assets/images/exp0x02/shodan_results_title_hash.png" />
 </p>
 
-Con eso aprendemos dos cosas: (1) cuando **no hay favicon**, el título sigue siendo un anzuelo sólido; (2) **pivoteando** desde el detalle de un servicio a su fingerprint (hash del título) bajamos el ruido a casi cero sin salir de la propia interfaz.
+Con eso aprendemos dos cosas: (1) cuando no hay favicon, el título sigue siendo un anzuelo sólido; (2) pivoteando desde el detalle de un servicio a su fingerprint (hash del título), bajamos el ruido a casi cero sin salir de la propia interfaz.
 
-#### 0x03.2.2 Qué nos guardamos
+#### 0x03.2.2 ¿Qué nos guardamos?
 
-Nada sofisticado: **host, puerto, ASN, dominio si lo hay, y cualquier redirección** o ruta interesante que veas en la respuesta. La organización fina va en la siguiente sección; por ahora, solo asegúrate de que cada hallazgo tenga su mínima ficha.
+Nada sofisticado: host, puerto, ASN, dominio si lo hay, y cualquier redirección o ruta interesante que veas en la respuesta. La organización fina va en la siguiente sección; por ahora, solo asegúrate de que cada hallazgo tenga su mínima ficha.
 
-### 0x03.3 Un paso más sobre el **contexto** (sin volarnos la cerca)
+### 0x03.3 Un paso más sobre el contexto (sin volarnos la cabeza)
 
 Aquí es donde deja de ser “buscar cadenas” y empieza la inteligencia de verdad. Con muy poco ya se puede:
 
-* **Atar contenido a campañas**: si la página de phishing redirige siempre a cierto formulario, dominio o *landing* específico, ya tienes un **vínculo operativo**. Eso alcanza para levantar una **alerta** a un colectivo o región concreta.
+* **Atar contenido a campañas**: si la página de phishing redirige siempre a cierto formulario, dominio o *landing* específico, ya tienes un **vínculo operativo**. Eso alcanza para levantar una alerta a un colectivo o región concreta.
 * **Mirar el mapa**: filtrar por **país/ASN/organización** revela si la cosa se concentra en proveedores o zonas concretas. Si el mismo título aparece en ASNs repetidos, es una pista de **infra compartida**.
 * **Certificados/TLS** (otro día): cadenas, emisores y huellas de cert suelen ser **oro** para unir infra dispersa. Aquí no lo tocamos para no abrir otro melón.
 * **Tiempo**: los **históricos** (normalmente de pago) te dejan ver **cuándo** apareció o desapareció un rasgo. Eso ayuda a coser **campañas** y, si hay publicaciones previas, hasta **atribución** plausible. No lo usaremos aquí, pero es la herramienta que querrás cuando esto escale.
 
 ---
 
-Cerramos con la misma invitación de siempre: esto apenas araña la superficie de lo que permiten Censys y Shodan. No venimos a inventar nada: venimos a mostrar **cómo lo estamos haciendo mientras aprendemos**. Lo que esperamos es que pique la curiosidad y se sumen ojos. Lxs adversarixs juegan en serio; nos toca responder igual.
+Cerramos con la misma invitación de siempre: esto apenas araña la superficie de lo que permiten Censys y Shodan. No venimos a inventar nada: venimos a mostrar cómo lo estamos haciendo mientras aprendemos. Lo que esperamos es que pique la curiosidad y se sumen ojos. Lxs adversarixs juegan en serio; nos toca responder igual.
 
 ---
 
