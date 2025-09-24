@@ -387,9 +387,9 @@ Usa las herramientas del emulador para **fijar coordenadas** y probar cómo Seek
 
 ## --[ 0x03 A la caza (favicons primero) ]--
 
-Antes de ponernos a hurgar, el mapa del terreno. **Censys** y **Shodan** no “leen” páginas como un buscador normal: indexan **metadatos de servicios** (banners, headers, certificados, títulos HTML, favicons…). Por eso nos sirven tanto aquí: **Seeker** recicla plantillas con **favicons** y **títulos** muy reconocibles; si pescas uno, es común que salgan varios más. Para consultas finas, Censys expone un lenguaje de búsqueda a nivel de campos (CenQL) y, sí, puedes filtrar por *favicons.hashes* o *html\_title*; Shodan tiene su propia sintaxis.
+Primero, las herramientas. **Censys** y **Shodan** no “leen” páginas como un buscador normal: indexan **metadatos de servicios** (banners, headers, certificados, títulos HTML, favicons…). Por eso nos sirven tanto aquí: **Seeker** recicla plantillas con **favicons** y **títulos** muy reconocibles; si pescas uno, es común que salgan varios más. Para consultas finas, Censys expone un lenguaje de búsqueda a nivel de campos ([CenQL](https://docs.censys.com/docs/censys-query-language)) y, sí, puedes filtrar por *favicons.hashes* o *html\_title*; [Shodan tiene su propia sintaxis](https://help.shodan.io/the-basics/search-query-fundamentals).
 
-### Acceso y “capas” (para que no te estrelles)
+### Niveles de acceso
 
 * **Sin cuenta**: curioseas poco.
 * **Cuenta gratuita**: más resultados, pero con **créditos** y límites visibles (abrir páginas extra, usar API, etc.). 
@@ -401,7 +401,7 @@ Antes de ponernos a hurgar, el mapa del terreno. **Censys** y **Shodan** no “l
 
 ### 0x03.1 Punto de partida: **favicon** del template reCAPTCHA (con Censys)
 
-Vamos a empezar por lo pequeño que deja pista grande: el **favicon** del template de **Google reCAPTCHA** en Seeker. La idea es sacar el **SHA-256** del favicon del template y buscarlo en Censys (sin cuenta).
+Vamos a empezar por lo pequeño que deja pista grande: el **favicon** del template de **reCAPTCHA** en Seeker. La idea es sacar el **SHA-256** del favicon del template y buscarlo en Censys (sin cuenta).
 
 > **¿Qué es un favicon?**
 El *favicon* es el iconito que ves en la pestaña del navegador y en los marcadores. Técnicamente es un archivo pequeño (ICO/PNG/SVG) que el sitio sirve (típicamente `/favicon.ico` o referenciado en el `<head>`). Como muchas plantillas reutilizan el mismo favicon, su **hash** se vuelve un “mini-fingerprint” fácil de buscar y correlacionar entre instancias (ideal para cazar infra reciclada como la de Seeker).
@@ -471,7 +471,7 @@ services.http.response.html_title="Are you a robot \?"
 
 #### 0x03.1.3 Afinar (cuando el favicon “se repite demasiado”)
 
-Si tu hash devuelve **demasiados** sitios (incluidos legítimos), añade rasgos que *tú mismo* hayas observado en instancias reales: headers, título, paths típicos. Por ejemplo, cuando buscamos instancias del template de Google Drive encontramos no solo instancias de Seeker sino otras que hacen ruido en los resultados. En nuestro caso hemos observado que las instancias de Seeker el header "Connection" de la respuesta siempre esta en "close". la mayoría de los hosts que nos son Seeker normalmente tienen este header en "keep-alive". Combinar **favicon + header** conocido puede acotar la búsqueda a _solo Seeker_:
+Si tu hash devuelve **demasiados** sitios (incluidos legítimos), añade rasgos que *tú mismo* hayas observado en instancias reales: headers, título, paths típicos. Por ejemplo, cuando buscamos instancias del template de **Google Drive** encontramos no solo instancias de Seeker sino otras que hacen ruido en los resultados. En nuestro caso hemos observado que las instancias de Seeker el header "Connection" de la respuesta siempre esta en "close". la mayoría de los hosts que **no** son Seeker normalmente tienen este header en "keep-alive". Combinar **favicon + header** conocido puede acotar la búsqueda a _solo Seeker_:
 
 ```text
 services.http.response.favicons.hashes="sha256:1e289014599c6f2946595fd9f744506d9656e14fe69625d91293bf92eb8dfa85" and services.http.response.headers: (key: `Connection` and value.headers: `close`)
@@ -496,7 +496,7 @@ Seguimos con la misma lógica pero ahora del lado de **Shodan** que esta vez usa
 
 #### Sacar el título del template (una vez, desde código)
 
-Primero confirmamos el `<title>` del template “Near You”. Deja aquí tu shell con los pasos exactos para abrir el HTML del template y extraer la cadena:
+Primero confirmamos el `<title>` del template “Near You”.
 
 ```bash
 $ cd seeker/template/nearyou
@@ -522,7 +522,7 @@ Va a salir ruido. Normal: hay servicios inocentes que coinciden por texto. Lo qu
 </p>
 
 <p align="center">
-  <img src="/assets/images/exp0x02/shodan_showing_service.png" />initial_results_by_title_strin
+  <img src="/assets/images/exp0x02/shodan_showing_service.png" />
 </p>
 
 #### 0x03.2.1 Pivot limpio dentro de Shodan
@@ -560,9 +560,9 @@ Cerramos con la misma invitación de siempre: esto apenas araña la superficie d
 
 ## --\[ 0x04 Documentar hallazgos en Colander ]--
 
-**Colander**, para nosotrxs, es el “cuaderno de campo” donde un caso deja de ser un montón de pestañas y notas sueltas y se vuelve **conocimiento navegable**. Es parte de la **PiRogue Tool Suite (PTS)** —sí, la misma gente de *PiRogue*— y está pensado para investigaciones digitales y gestión de casos: organizas eventos, artefactos, *observables*, los conectas en un caso, y de ahí puedes generar reportes, *feeds* e incluso reglas. No haremos un tutorial aquí; si quieres aprender a usarlo bien, toca pasar por la **doc oficial** de PTS/Colander (vale la pena).
+**Colander**, para nosotrxs, es el “cuaderno de campo” donde un caso deja de ser un montón de pestañas y notas sueltas y se vuelve **conocimiento navegable**. Es parte de la **PiRogue Tool Suite (PTS)** —sí, la misma gente de *PiRogue*— y está pensado para investigaciones digitales y gestión de casos: organizas eventos, artefactos, *observables*, los conectas en un caso, y de ahí puedes generar reportes, *feeds* e incluso reglas. No haremos un tutorial aquí; si quieres aprender a usarlo bien, toca pasar por [la **doc oficial** de PTS/Colander](https://pts-project.org/docs/colander/overview/) (vale la pena).
 
-> Este capítulo va de **metodología aplicada**: cómo tomamos lo que encontramos “en la caza” y lo bajamos a Colander sin perdernos en el intento.
+> Este capítulo va de **metodología aplicada**: cómo tomamos lo que encontramos “en la caza” y lo bajamos a Colander.
 
 ### Antes de teclear: observables vs. IOCs (y la duda sana)
 
@@ -571,7 +571,7 @@ En este experimento con **Seeker** aparecen muchísimas **IPs**, **URLs** y puer
 * Un **observable** es algo que viste tal cual (una IP, una URL, un *title*), útil para buscar/correlacionar.
 * Un **IOC** sugiere **malicia accionable** (sirve para bloquear/alertar con bajo costo de falsos positivos).
 
-Si alguien aplicara a ciegas un bloqueo con base en tus IPs/URLs “de laboratorio”, podría **afectar hosts legítimos** (p. ej., un servidor que temporalmente alojó una instancia de prueba). La línea entre “observable” e “IOC” se traza con **contexto** (más abajo volvemos a eso). Nuestra regla práctica: **subimos primero observables**, los **etiquetamos** y, cuando hay evidencia suficiente, **ascendemos** algunos a IOC.
+Si alguien aplicara a ciegas un bloqueo con base en tus IPs/URLs “de laboratorio”, podría **afectar hosts legítimos** (p. ej., un servidor que temporalmente alojó una instancia de prueba o un _endpoint_ de un CDN). La línea entre “observable” e “IOC” se traza con **contexto** (más abajo volvemos a eso). Nuestra regla práctica: **subimos primero observables**, los **etiquetamos** y, cuando hay evidencia suficiente, **ascendemos** algunos a IOC.
 
 ### Cómo lo estamos modelando (nuestro flujo, no “el correcto”)
 
@@ -602,7 +602,7 @@ En la parte de abajo podemos ver que obtenemos 3 observables (entre otras cosas)
 
 Además, como en Censys, tenemos la lupita para __privotar__, en este caso  podemos investigar el dominio y luego añadirlo al caso.
 
-Pero tenemos otro dato importante aca, un "reverse dns" que no aparece en los observables que nos mostró la investigación de la ip en colander, podemos usar la misma herramienta de investigación y ver que encuentra Colander para ese dominio, veamos:
+Pero tenemos otro dato importante aca, un "reverse dns" que no aparece en los observables que nos mostró la investigación de la IP en Colander, podemos usar la misma herramienta de investigación y ver que encuentra Colander para ese dominio, veamos:
 
 <p align="center">
   <img src="/assets/images/exp0x02/colander-dominio-maliciosos-eventos.png" />
@@ -637,11 +637,11 @@ En resumen, aquí vimos lo **básico** para ordenar hallazgos en Colander; el ve
 
 ### Esto es “nuestra forma”, no la única
 
-Colander es **potente** y viene con ideas muy útiles para equipos de sociedad civil: opera **mientras investigas**, no sólo como “archivo final”. Hay alternativas como **MISP** (clásico en *threat intel* y compartición), con sus propias ventajas; en nuestra experiencia, Colander tiene una **curva más amable** para llevar **casos vivos** y luego exportar lo aprendido. También **convive** bien con otros sistemas si necesitas publicar/consumir *feeds*. (Si quieres comparar filosofías, mira la página de MISP; acá no nos metemos a fondo). 
+Colander es **potente** y viene con ideas muy útiles para equipos de sociedad civil: opera **mientras investigas**, no sólo como “archivo final”. Hay alternativas como **MISP** (clásico en *threat intel* y compartición), con sus propias ventajas; en nuestra experiencia, Colander tiene una **curva más amable** para llevar **casos vivos** y luego exportar lo aprendido. También **convive** bien con otros sistemas si necesitas publicar/consumir *feeds*. (Si quieres comparar filosofías, [mira la página de MISP](https://www.misp-project.org/); acá no nos metemos a fondo). 
 
 ---
 
-## --\[ 0x05 Exportar (feeds) y usarlo como IOC en MVT ]--
+## --\[ 0x05 Exportar (feeds) y usarlos como IOCs en MVT ]--
 
 Colander tiene una pieza clave para “sacar” lo que encontramos y **usarlo**: los **feeds**. Aquí vamos a usar **feeds de entidades** (no de reglas, eso queda para otro día). Por “entidades” nos referimos a lo que Colander modela en la UI (en inglés): **Actors, Artifacts, Devices, Observables, Threats**. La idea: exportar **Observables** y **Threats** de este caso, bajarlos en **STIX2** y apuntar **MVT** a ese archivo como fuente de IOCs.
 
@@ -666,7 +666,7 @@ Colander tiene una pieza clave para “sacar” lo que encontramos y **usarlo**:
 
    * **TLP (Traffic Light Protocol)** define **cómo se puede compartir** lo exportado.
    * **PAP (Permissible Actions Protocol)** define **qué se puede hacer** con lo exportado.
-   * El feed **solo** incluirá entidades cuyo **TLP/PAP** sea menor o igual a lo que selecciones aquí. si seleccionas "WHITE" solo saldrán los __whites__, si en otro extremo seleccionas los "RED" saldrán todos: los red, yellow, green y white.
+   * El feed **solo** incluirá entidades cuyo **TLP/PAP** sea mayor o igual a lo que selecciones aquí. si seleccionas "WHITE" solo saldrán los __whites__, si en otro extremo seleccionas los "RED" saldrán todos: los red, yellow, green y white.
    * En este experimento dejamos **ambos en `WHITE`**, así **no** se exportan entidades etiquetadas como `YELLOW` (tenemos algunas así porque salieron de un servidor legítimo que estuvo comprometido y preferimos **no** publicarlas como IOC).
    
 <p align="center">
@@ -679,7 +679,7 @@ Guarda. Tu feed ya aparece en la lista de **Feeds**.
 
 ### 0x05.2 Ver/usar el feed: JSON, STIX2, CSV (y cURL listo)
 
-Al abrir el feed, verás una url con las opciones para bajar **JSON**, **STIX2** y **CSV**, y tres recuadros con **cURL** ya armado. Para nuestro flujo, nos centramos en el que dice:
+Al ver la entrada para este feed, verás una url con las opciones para bajar **JSON**, **STIX2** y **CSV**, y tres recuadros con **cURL** ya armado. Para nuestro flujo, nos centramos en el que dice:
 
 > **“Download as a STIX2 file and use with mvt:”**
 
@@ -688,7 +688,7 @@ Primero **descargamos** el feed en formato **STIX2**.
 > ⚠️ Ojo con la **URL**: Colander suele incluir parámetros con caracteres especiales; **pon la URL entre comillas** o tu shell se va a tropezar.
 
 ```bash
-# 1) Descargar el feed como STIX2
+# Descargar el feed como STIX2
 curl -H "X-Colander-Feed: Secret XxxXxXXXxX" \
 -o ~/entities-da64f522-c3e6-48c0-8262-190c5d90ea08.stix2 \
 "https://colander.somesite.site/feed/entities/da64f522-c3e6-48c0-8262-190c5d90ea08?format=stix2"
@@ -703,25 +703,20 @@ curl -H "X-Colander-Feed: Secret XxxXxXXXxX" \
 
 Hemos implantado un SMS con uno de los dominios maliciosos en un emulador de Android, hicimos una extracción con `androidqf` y vamos a usar esa extracción en esta prueba.
 
-Ahora corremos **MVT** apuntando a nuestro **STIX2** como fuente de IOCs. Dependiendo de tu tipo de extracción, el subcomando puede variar; estas dos variantes cubren la mayoría de casos:
+Ahora corremos **MVT** apuntando a nuestro **STIX2** como fuente de IOCs. Dependiendo de tu tipo de extracción, el subcomando puede variar:
 
 ```bash
 mvt-android check-androidqf --iocs ~/entities-da64f522-c3e6-48c0-8262-190c5d90ea08.stix2  ~/androidqf/90eba9d5-95da-429b-8ea0-0e1df58e07dd
 ```
 &nbsp;
 
-Salida esperable (resumen): MVT detecta el **dominio** que documentamos en el caso (p. ej., el dominio en español), y—si tu feed lo incluye en STIX2 con relaciones—verás el indicador etiquetado con el **nombre/label** de la **Threat** asociada.
+Salida esperable : MVT detecta el **dominio** que documentamos en el caso (p. ej., el dominio en español), y—si tu feed lo incluye en STIX2 con relaciones—verás el indicador etiquetado con el **nombre/label** de la **Threat** asociada.
 
 <p align="center">
   <img src="/assets/images/exp0x02/feeds_mvt_output.png" />
 </p>
----
-### 0x05.4 Buenas prácticas rápidas (para no pegarse)
 
-* **Secret** ≠ público: comparte la **URL + secret** solo con quien deba tener acceso; rota el secret al cerrar una colaboración.
-* **TLP/PAP** en serio: si marcas `WHITE` en el feed, pero tus entidades están `YELLOW`, **no saldrán**. Revisa etiquetas si “falta algo”.
-* **Observables → IOC**: no todo observable merece ser IOC. En este experimento dejamos fuera algunos `YELLOW` que venían de hosts legítimos previamente comprometidos.
-* **Reproducible**: guarda el comando cURL (con comillas) y el comando de MVT que usaste en el **case** como comentario/notas. A la próxima, lo repites en dos pasos.
+Y con esto completamos el círculo: desde la idea, pasando por la investigación y terminando con la aplicación de los resultados a la vida práctica. Maravilloso! :)
 
 ---
 
@@ -731,13 +726,9 @@ Hasta acá, puro calentamiento. Rasguñamos la superficie y ya salieron cosas sa
 
 En **ZoqueLabs** esto es lo nuestro: experimentar, fallar rápido, iterar y destilar prácticas que sirvan a la **inteligencia de amenazas**. Este experimento sigue **abierto**; si te atoras, si quieres compartir pistas, si te pica la curiosidad: **escríbenos**. Somos un nodo en un ecosistema que necesita más nodos—**más ojos sobre las amenazas**—para detectarlas a tiempo, actuar y documentar.
 
+El repositorio con los _Feeds_ de este experimento se puede encontrar aquí: [https://github.com/ZoqueLabs/mapping-seeker-files](https://github.com/ZoqueLabs/mapping-seeker-files)
+
 Nos vemos en la próxima cacería. Trae café, logs y ganas de romperte la cabeza con cariño.
-
-### Enlaces del proyecto
-
-* Repo del write-up y materiales: [🔗 repositorio](PON_AQUÍ_URL_DEL_REPO)
-* Exports (feeds STIX2/JSON/CSV) de Colander: [🔗 exports](PON_AQUÍ_URL_DE_EXPORTS)
-* Notas y ejemplos reproducibles: [🔗 ejemplos](PON_AQUÍ_URL_DE_EJEMPLOS)
 
 
 
