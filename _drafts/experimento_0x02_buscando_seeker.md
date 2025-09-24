@@ -50,7 +50,7 @@ Este escrito viene cargado: herramientas de hackeo, rastreo de infraestructura, 
 
 ## --[ 0x01 Entendiendo Seeker ]--
 
-### 0x01. 1 Lo básico
+### 0x01.1 Lo básico
 [Seeker](https://github.com/thewhiteh4t/seeker) es una herramienta que usa con las _APIs_ del navegador para extraer ubicación precisa y otros datos del dispositivo. Fue creada para realizar _geolocation phishing_, es decir, engañar a un objetivo para que comparta su ubicación real a través del navegador. Pero eso no es todo, también recolecta metadatos del dispositivo, como modelo, resolución de pantalla, sistema operativo, red y más. No instala nada, no explota vulnerabilidades, no se mete con el sistema operativo. Solo espera a que la víctima entre a un enlace y le dé permiso al navegador para compartir la ubicación. Con eso, Seeker hace su trabajo.
 
 A nivel técnico, Seeker levanta un servidor web que sirve una página personalizada (tipo Google Drive, grupos de Telegram, Whatsapp..). Esa página incluye un script en JavaScript que pide acceso a la ubicación usando la API de geolocalización de HTML5. Cuando el navegador lo permite, Seeker captura:
@@ -68,12 +68,14 @@ Y acá es donde Seeker se vuelve relevante: es simple y funciona, y eso basta pa
 
 Bueno sin más preambulo, ahora si vamos a correr Seeker.
 
-
-### 0x01. 2 Correr Seeker
-Antes de correrlo, recomendamos hacerlo siempre desde un entorno controlado: una máquina virtual, un contenedor o una infraestructura aislada. No solo por seguridad, sino para evitar filtrar info sin querer. Nosotres decidimos usar uno de los servidores temporales y gratuitos de _segfault_ de [The Hackers Choice](https://www.thc.org/segfault/). 
 ---
 
-#### 0x01. 2.1 Segfault
+### 0x01.2 Correr Seeker
+Antes de correrlo, recomendamos hacerlo siempre desde un entorno controlado: una máquina virtual, un contenedor o una infraestructura aislada. No solo por seguridad, sino para evitar filtrar info sin querer. Nosotrxs decidimos usar uno de los servidores temporales y gratuitos de _segfault_ de [The Hackers Choice](https://www.thc.org/segfault/). 
+
+---
+
+#### 0x01.2.1 Segfault
 
 Segfault es un servicio de servidores temporales efímeros: máquinas Linux que puedes levantar con un solo comando y que desaparecen al cabo de unas horas. Son perfectas para pruebas rápidas, experimentos controlados y —como en este caso— correr herramientas sin ensuciar tu propio equipo.
 
@@ -98,7 +100,7 @@ Notas, problemas tipicos y fix:
 </p>
 ---
 
-#### 0x01. 2.2 Tmux - mantener vivo a Seeker
+#### 0x01.2.2 Tmux - mantener vivo a Seeker
 
 `tmux` es un _multiplexor de bolsillo_, es lo que evita que pierdas todo cuando el SSH se cae. Imaginemos a tmux como varias pantallas dentro de una sola conexión: Seeker en una, túnel en otra, pruebas y logs en otra. Si la conexión se rompe, la sesión sigue viva y puedes volver a conectarte. Aquí lo usamos para:
 
@@ -124,16 +126,21 @@ Esto nos dio la tranquilidad de que, aunque se cortara el SSH, Seeker seguiría 
   <img src="/assets/images/exp0x02/2_Tmux_3_paneles.png" />
 </p>
 
+---
 
-### 0x01. 3 Iniciando Seeker — paso a paso dentro de segfault + tmux
+### 0x01.3 Iniciando Seeker — paso a paso dentro de segfault + tmux
 
 Con todo esto listo ahora si a lo que vinimos vamos.
 
-** 1. Clonar el repo**: Dentro de segfault vamos a instalar seeker desde el repositorio oficial en [github](https://github.com/thewhiteh4t/seeker), con el siguiente comando:
+- Clonar el repo: Dentro de segfault vamos a instalar seeker desde el repositorio oficial en [github](https://github.com/thewhiteh4t/seeker), con el siguiente comando:
+
+
 ```bash
 git clone https://github.com/thewhiteh4t/seeker.git
 ```
+&nbsp;
 Debería verse así:
+
 ```bash
 ─(root💀lsd-LizardSoft)-[~]
 └─# git clone https://github.com/thewhiteh4t/seeker.git
@@ -154,7 +161,7 @@ Resolving deltas: 100% (836/836), done.
   <img src="/assets/images/exp0x02/3_Seeker_Clone_complete.png" />
 </p>
 
-** 2. Ahora, ve al path donde está Seeker y lo instalas en la VM así:**
+- Ahora, ve al path donde está Seeker y lo instalas en la VM así:
 
 ```bash
 cd seeker
@@ -168,7 +175,7 @@ chmod +x install.sh
 </p>
 
 
-** 3. Bien ahí. Ahora vamos a correr seeker desde la ventada de `tmux`.**
+- Bien ahí. Ahora vamos a correr seeker desde la ventada de `tmux`.
 ```bash
 tmux new -s seeker
 ```
@@ -189,7 +196,9 @@ Aquí puedes seleccionar alguna opción: Google drive, Near You, WhatsApp, Teleg
 
 Con Seeker arrancando en `localhost:8080` ya tenemos el servicio listo localmente. Ahora el siguiente paso es hacer que esa instancia sea accesible desde afuera, no para “pescar gente”, sino para ver cómo se presenta una instancia real desde un navegador externo, analizar las peticiones y los metadatos que deja, y extraer rasgos reutilizables para búsquedas en Censys/Shodan. Para ello montamos un __reverse tunnel__ que nos dará una URL pública HTTPS que usaremos únicamente como anzuelo de prueba en un entorno controlado.
 
-### 0x01. 4 Reverse tunnels (localhost.run)
+---
+
+### 0x01.4 Reverse tunnels (localhost.run)
 
 Los túneles reversos, crean un puente entre el puerto local de la VM y una URL pública en HTTPS; así exponemos el Seeker que ya está corriendo hacia afuera, solo para pruebas.
 
@@ -210,27 +219,29 @@ ssh -R80:0:8080 -o StrictHostKeyChecking=accept-new nokey@localhost.run
 - `nokey@localhost.run`: usuario “invitado” para crear el túnel.
 - `StrictHostKeyChecking=accept-new`: evita el prompt de verificación de clave la primera vez.
 
-Qué deberías ver: una URL pública tipo https://randomsub.localhost.run que apunta directo a tu puerto local.
+Qué deberías ver: una URL pública tipo `https://randomsub.localhost.run` que apunta directo a tu puerto local.
 
 <p align="center">
   <img src="/assets/images/exp0x02/6_Tunnel_URL_Localhostrun.png" />
 </p>
 
-Este metodo tiene algunos pros y contras, por un lado es super fácil de montar y no instala nada en la VM, pero puede ser que el servicio sea inestable y limitado, y también puede ser que cambie la URL cada vez que la corres, pero nos funciona para el experimento, asi que vamos.
+Este método tiene algunos pros y contras, por un lado es super fácil de montar y no instala nada en la VM, pero puede ser que el servicio sea inestable y limitado, y también puede ser que cambie la URL cada vez que la corres, pero nos funciona para el experimento, asi que vamos.
 
 > Layout recomendado para `tmux`:
 > - Panel A (izquierda, grande): Seeker (servidor local).
 > - Panel B (derecha, arriba): túnel HTTPS (`localhost.run`).
-> - Panel C (derecha, abajo): logs / debugging (tcpdump, tail -f, etc.). Esta opción es muy útil para para ver más detalles del tráfico HTTP, headers o para depurar, pero ya sabes, es opcional.
+> - Panel C (derecha, abajo): logs / debugging (tcpdump, tail -f, etc.). Esta opción es muy útil para para ver más detalles del tráfico HTTP, headers o para depurar, pero ya sabes, es opcional. Acá solo vamos a mostrar A y B.
 
 
 <p align="center">
   <img src="/assets/images/exp0x02/7_tmux_layout.png" />
 </p>
+---
 
-### 0x01 5 Seeker listo
+### 0x01.5 Seeker listo
 
 Seeker quedó montado y accesible vía la URL pública del túnel; en la sesión de tmux dejamos el panel A con Seeker y el panel B con el túnel HTTPS. Con la URL ya podemos abrir la instancia desde un navegador limpio o un emulador y ver en vivo qué captura la plantilla (coords si aceptan, o metadata si niegan).
+
 ---
 #### Pruebas
 Con el navegador del host si estás usando un perfil limpio, abre la URL pública, acá ya deberías ver la página de Seeker.
@@ -252,12 +263,14 @@ Con el navegador del host si estás usando un perfil limpio, abre la URL públic
   <img src="/assets/images/exp0x02/10_Seeker_mostrando_IP_sin coords.png" />
 </p>
 ---
+
 #### De Seeker al hunting
 
 Ver que Seeker funciona es solo el primer paso. Lo que realmente nos interesa es sacar huellas que podamos reusar para cazar otras instancias: el favicon (`/favicon.ico`) actúa como un mini-fingerprint para correlación; el `HTML title` suele delatar plantillas enteras; **los headers / banners HTTP** (Server, Connection, redirecciones) ayudan a filtrar ruido y agrupar hosts hermanados; las rutas y plantillas (JS/CSS, paths estáticos) son huellas que se repiten y dejan rastros como migas de pan; y el combo certificados/TLS + IP/ASN nos da contexto de hosting y posibles clusters operativos. Con estos artefactos armamos queries en Censys/Shodan y documentamos todo en Colander para generar IOCs listos para exportar —esto es investigación práctica, no curiosidad casual-. 
 
-Ahora sí: manos a la obra, primero nos vamos con OpSec y luego a lo divertido, el mapeo.
+Ahora sí, manos a la obra, primero nos vamos con OpSec y luego a lo divertido, el mapeo.
 
+---
 
 ## --[ 0x02 OpSec ]--
 
@@ -391,7 +404,7 @@ Usa las herramientas del emulador para **fijar coordenadas** y probar cómo Seek
 * Con esta cadena, *todo* sale por segfault; tu red del lab no asoma la cabeza.
 * El navegador dedicado evita mezclar cookies/ extensiones/ idioma/zona de tu día a día.
 * La rama móvil con `gost` te deja probar “como teléfono” sin exponer el host y con ubicación simulada. **Es nuestra recomendación para este experimento.**
-* Si tu caso pide otra cosa (VMs, Tor, VPN), cámbiala sin pena. **Esta es nuestra recomendación base** porque es corta, práctica y reusable para lo que viene.
+* Si tu caso pide otra cosa (VMs, Tor, VPN), cámbiala sin pena. Esta es nuestra recomendación base porque es corta, práctica y reusable para lo que viene.
 
 ---
 
@@ -405,17 +418,13 @@ Primero, las herramientas. **Censys** y **Shodan** no “leen” páginas como u
 * **Cuenta gratuita**: más resultados, pero con **créditos** y límites visibles (abrir páginas extra, usar API, etc.). 
 * **De pago**: cuotas mucho más amplias y, sobre todo, **históricos**: ver “cuándo” se observó algo, comparar estados en el tiempo, etc. (útil para correlacionar campañas). Aquí no usaremos históricos pagos, pero existen y son oro en investigaciones largas. Para Shodan, el acceso también va por **créditos de consulta** (filtros, paginar… gastan). 
 
-> Mini-tip: en Shodan, el filtro por favicon *no* usa SHA-256; usa **MurmurHash3 (mmh3)** sobre el favicon. No mezcles los hashers o te frustras.
+> Mini-tip: en Shodan, el filtro por favicon *no* usa SHA-256; usa **MurmurHash3 (mmh3)** sobre el favicon. No mezcles los hashes o te frustras.
 
 ---
 
 ### 0x03.1 Punto de partida: **favicon** del template reCAPTCHA (con Censys)
 
-<<<<<<< HEAD
 Vamos a empezar por lo pequeño que deja una pista grande: el **favicon** del template de **Google reCAPTCHA** en Seeker. La idea es sacar el **SHA-256** del favicon del template y buscarlo en Censys (sin cuenta).
-=======
-Vamos a empezar por lo pequeño que deja pista grande: el **favicon** del template de **reCAPTCHA** en Seeker. La idea es sacar el **SHA-256** del favicon del template y buscarlo en Censys (sin cuenta).
->>>>>>> b1239b09a8c3ce7e132bff7cfbded80f66cf108c
 
 > **¿Qué es un favicon?**
 El *favicon* es el iconito que ves en la pestaña del navegador y en los marcadores. Técnicamente es un archivo pequeño (ICO/PNG/SVG) que el sitio sirve (típicamente `/favicon.ico` o referenciado en el `<head>`). Como muchas plantillas reutilizan el mismo favicon, su **hash** se vuelve un “mini-fingerprint” fácil de buscar y correlacionar entre instancias (ideal para cazar infra reciclada como la de Seeker).
@@ -435,8 +444,9 @@ Con el hash listo, en **Censys** (https://search.censys.io/) buscamos así (usa 
 ```text
 services.http.response.favicons.hashes="sha256:4673c3ef82f32e37d0021d3683b5c132dbab0942e7137427fc9716235289c678""
 ```
+&nbsp;
 
-(Ese campo existe y acepta “`sha256:<hex>`” como valor; si dudas, abre cualquier host y mira cómo Censys lo nombra en su panel).
+Ese campo existe y acepta “`sha256:<hex>`” como valor; si dudas, abre cualquier host y mira cómo Censys lo nombra en su panel.
 
 <p align="center">
   <img src="/assets/images/exp0x02/censys_resultados_favicon_captcha.png" />
@@ -485,11 +495,8 @@ services.http.response.html_title="Are you a robot \?"
 
 #### 0x03.1.3 Afinar (cuando el favicon “se repite demasiado”)
 
-<<<<<<< HEAD
 Si tu hash devuelve demasiados sitios (incluidos legítimos), añade rasgos que hayas observado en instancias reales: headers, título, paths típicos. Por ejemplo, cuando buscamos instancias del template de Google Drive encontramos no solo instancias de Seeker sino otras que hacen ruido en los resultados. En nuestro caso, hemos observado que en las instancias de Seeker el header "Connection" de la respuesta siempre esta en "close". La mayoría de los hosts que no son Seeker, normalmente tienen este header en "keep-alive". Combinar **favicon + header** conocido puede acotar la búsqueda a _solo Seeker_:
-=======
-Si tu hash devuelve **demasiados** sitios (incluidos legítimos), añade rasgos que *tú mismo* hayas observado en instancias reales: headers, título, paths típicos. Por ejemplo, cuando buscamos instancias del template de **Google Drive** encontramos no solo instancias de Seeker sino otras que hacen ruido en los resultados. En nuestro caso hemos observado que las instancias de Seeker el header "Connection" de la respuesta siempre esta en "close". la mayoría de los hosts que **no** son Seeker normalmente tienen este header en "keep-alive". Combinar **favicon + header** conocido puede acotar la búsqueda a _solo Seeker_:
->>>>>>> b1239b09a8c3ce7e132bff7cfbded80f66cf108c
+
 
 ```text
 services.http.response.favicons.hashes="sha256:1e289014599c6f2946595fd9f744506d9656e14fe69625d91293bf92eb8dfa85" and services.http.response.headers: (key: `Connection` and value.headers: `close`)
@@ -542,6 +549,7 @@ Va a salir ruido, es normal, hay servicios inocentes que coinciden por texto. Lo
 <p align="center">
   <img src="/assets/images/exp0x02/shodan_showing_service.png" />
 </p>
+---
 
 #### 0x03.2.1 Pivot limpio dentro de Shodan
 
@@ -557,9 +565,13 @@ Arriba del bloque del servicio verás un **badge verde**. Haz clic ahí y se des
 
 Con eso aprendemos dos cosas: (1) cuando no hay favicon, el título sigue siendo un anzuelo sólido; (2) pivoteando desde el detalle de un servicio a su fingerprint (hash del título), bajamos el ruido a casi cero sin salir de la propia interfaz.
 
+---
+
 #### 0x03.2.2 ¿Qué nos guardamos?
 
 Nada sofisticado: host, puerto, ASN, dominio si lo hay, y cualquier redirección o ruta interesante que veas en la respuesta. La organización fina va en la siguiente sección; por ahora, solo asegúrate de que cada hallazgo tenga su mínima ficha.
+
+---
 
 ### 0x03.3 Un paso más sobre el contexto (sin volarnos la cabeza)
 
@@ -588,6 +600,7 @@ En este experimento con **Seeker** aparecen muchísimas **IPs**, **URLs** y puer
 
 * Un **observable** es algo que viste tal cual (una IP, una URL, un *title*), útil para buscar/correlacionar.
 * Un **IOC** sugiere **malicia accionable** (sirve para bloquear/alertar con bajo costo de falsos positivos).
+
 
 Si alguien aplicara a ciegas un bloqueo con base en tus IPs/URLs “de laboratorio”, podría **afectar hosts legítimos** (p. ej., un servidor que temporalmente alojó una instancia de prueba o un _endpoint_ de un CDN). La línea entre “observable” e “IOC” se traza con **contexto** (más abajo volvemos a eso). Nuestra regla práctica: **subimos primero observables**, los **etiquetamos** y, cuando hay evidencia suficiente, **ascendemos** algunos a IOC.
 
@@ -703,7 +716,7 @@ Al ver la entrada para este feed, verás una url con las opciones para bajar **J
 
 Primero **descargamos** el feed en formato **STIX2**.
 
-> ⚠️ Ojo con la **URL**: Colander suele incluir parámetros con caracteres especiales; **pon la URL entre comillas** o tu shell se va a tropezar.
+> Ojo con la **URL**: Colander suele incluir parámetros con caracteres especiales; **pon la URL entre comillas** o tu shell se va a tropezar.
 
 ```bash
 # Descargar el feed como STIX2
@@ -728,21 +741,21 @@ mvt-android check-androidqf --iocs ~/entities-da64f522-c3e6-48c0-8262-190c5d90ea
 ```
 &nbsp;
 
-Salida esperable : MVT detecta el **dominio** que documentamos en el caso (p. ej., el dominio en español), y—si tu feed lo incluye en STIX2 con relaciones—verás el indicador etiquetado con el **nombre/label** de la **Threat** asociada.
+Salida esperable : MVT detecta el **dominio** que documentamos en el caso (p. ej., el dominio en español), y —si tu feed lo incluye en STIX2 con relaciones— verás el indicador etiquetado con el **nombre/label** de la **Threat** asociada.
 
 <p align="center">
   <img src="/assets/images/exp0x02/feeds_mvt_output.png" />
 </p>
 
-Y con esto completamos el círculo: desde la idea, pasando por la investigación y terminando con la aplicación de los resultados en la vida práctica. Maravilloso! :)
+Y con esto completamos el círculo: desde la idea, pasando por la investigación y terminando con la aplicación de los resultados en la vida práctica. ¡Maravilloso! :)
 
 ---
 
 ## --\[ 0x06 Esto es solo el comienzo ]--
 
-Hasta acá, puro calentamiento. Rasguñamos la superficie y ya salieron cosas sabrosas: hosts con más de un señuelo, otros sirviendo **malware**, algún servidor con **30+ instancias de Seeker** corriendo a la vez. **El que busca, encuentra.** Al principio parece cuesta arriba, pero cuando te pones en la tarea, las piezas encajan, las metodologías se acomodan y—como nos gusta decir—**no aprendemos a hackear: hackeamos para aprender**.
+Hasta acá, puro calentamiento. Rasguñamos la superficie y ya salieron cosas sabrosas: hosts con más de un señuelo, otros sirviendo **malware**, algún servidor con **30+ instancias de Seeker** corriendo a la vez. El que busca, encuentra. Al principio parece cuesta arriba, pero cuando te pones en la tarea, las piezas encajan, las metodologías se acomodan y —como nos gusta decir—** no aprendemos a hackear: hackeamos para aprender**.
 
-En **ZoqueLabs** esto es lo nuestro: experimentar, fallar rápido, iterar y destilar prácticas que sirvan a la **inteligencia de amenazas**. Este experimento sigue **abierto**; si te atoras, si quieres compartir pistas, si te pica la curiosidad: **escríbenos**. Somos un nodo en un ecosistema que necesita más nodos—**más ojos sobre las amenazas**—para detectarlas a tiempo, actuar y documentar.
+En **ZoqueLabs** esto es lo nuestro: experimentar, fallar rápido, iterar y destilar prácticas que sirvan a la **inteligencia de amenazas**. Este experimento sigue abierto; si te atoras, si quieres compartir pistas, si te pica la curiosidad: **escríbenos**. Somos un nodo en un ecosistema que necesita más nodos —**más ojos sobre las amenazas**— para detectarlas a tiempo, actuar y documentar.
 
 El repositorio con los _Feeds_ de este experimento se puede encontrar aquí: [https://github.com/ZoqueLabs/mapping-seeker-files](https://github.com/ZoqueLabs/mapping-seeker-files)
 
