@@ -19,7 +19,7 @@ Este escrito se distribuye con una licencia Creative Commons CC BY-SA (Reconocim
 <a href="">English version</a>
 </div>
 
-## ToC
+## -[ ToC ]-
 
 -> 0x00 **Intro**
 -> 0x01 **Entendiendo Seeker**
