@@ -8,17 +8,26 @@ description: En este write-up exploramos el uso de Censys y Shodan para encontra
 lang: es
 ---
 
-# --\[ Experimento 0x02: Inteligencia de amenazas: Buscando Seeker ]--
+<div align=center>
+<h1>--[ Experimento 0x02: Buscando Seeker ]--</h1>
+<h3>Inteligencia de amenazas</h3>
+Por: ZoqueLabs
+<br>
+<br>
+Este escrito se distribuye con una licencia Creative Commons CC BY-SA (Reconocimiento - Compartir Igual)
+<br>
+<a href="">English version</a>
+</div>
 
 ## ToC
 
-* 0x00 Intro
-* 0x01 Entendiendo Seeker
-* 0x02 OpSec
-* 0x03 A la caza (favicons primero)
-* 0x04 Documentar hallazgos en Colander
-* 0x05 Exportar (feeds) y usarlo como IOC en MVT
-* 0x06 Esto es solo el comienzo.
+-> 0x00 **Intro**
+-> 0x01 **Entendiendo Seeker**
+-> 0x02 **OpSec**
+-> 0x03 **A la caza (favicons primero)**
+-> 0x04 **Documentar hallazgos en Colander**
+-> 0x05 **Exportar (feeds) y usarlos como IOCs en MVT**
+-> 0x06 **Esto es solo el comienzo.**
 
 ## --\[ 0x00 Intro ]--
 
@@ -716,7 +725,7 @@ Salida esperable : MVT detecta el **dominio** que documentamos en el caso (p. ej
   <img src="/assets/images/exp0x02/feeds_mvt_output.png" />
 </p>
 
-Y con esto completamos el círculo: desde la idea, pasando por la investigación y terminando con la aplicación de los resultados a la vida práctica. Maravilloso! :)
+Y con esto completamos el círculo: desde la idea, pasando por la investigación y terminando con la aplicación de los resultados en la vida práctica. Maravilloso! :)
 
 ---
 
