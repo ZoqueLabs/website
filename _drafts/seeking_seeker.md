@@ -14,7 +14,8 @@ lang: en
 By: ZoqueLabs
 <br>
 <br>
-This writing is distributed under a Creative Commons CC BY-SA (Acknowledgment - Share Alike) license
+This writing is distributed under a Creative Commons CC BY-SA (Acknowledgment - Share Alike) license. It was produced with the support of [Derechos Digitales](https://www.derechosdigitales.org/en/home/). 
+<br>
 <br>
 <a href="">English version</a>
 </div>
