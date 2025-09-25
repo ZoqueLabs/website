@@ -26,7 +26,7 @@ Este escrito se distribuye con una licencia Creative Commons CC BY-SA (Reconocim
 -> 0x02 **OpSec**
 -> 0x03 **A la caza (favicons primero)**
 -> 0x04 **Documentar hallazgos en Colander**
--> 0x05 **Exportar (feeds) y usarlos como IOCs en MVT**
+-> 0x05 **Exportar Feeds y usarlos como IOCs en MVT**
 -> 0x06 **Esto es solo el comienzo.**
 
 ## --\[ 0x00 Intro ]--
@@ -561,7 +561,7 @@ Aquí es donde deja de ser “buscar cadenas” y empieza la inteligencia de ver
 
 * **Atar contenido a campañas**: si la página de phishing redirige siempre a cierto formulario, dominio o *landing* específico, ya tienes un **vínculo operativo**. Eso alcanza para levantar una alerta a un colectivo o región concreta.
 * **Mirar el mapa**: filtrar por **país/ASN/organización** revela si la cosa se concentra en proveedores o zonas concretas. Si el mismo título aparece en ASNs repetidos, es una pista de **infra compartida**.
-* **Certificados/TLS** (otro día): cadenas, emisores y huellas de cert suelen ser **oro** para unir infra dispersa. Aquí no lo tocamos para no abrir otro melón.
+* **Certificados/TLS** (para otro wiriteup): cadenas, emisores y huellas de cert suelen ser **oro** para unir infra dispersa. Aquí no lo tocamos para no abrir otro melón.
 * **Tiempo**: los **históricos** (normalmente de pago) te dejan ver **cuándo** apareció o desapareció un rasgo. Eso ayuda a coser **campañas** y, si hay publicaciones previas, hasta **atribución** plausible. No lo usaremos aquí, pero es la herramienta que querrás cuando esto escale.
 
 ---
@@ -654,7 +654,7 @@ Colander es **potente** y viene con ideas muy útiles para equipos de sociedad c
 
 ---
 
-## --\[ 0x05 Exportar (feeds) y usarlos como IOCs en MVT ]--
+## --\[ 0x05 Exportar Feeds y usarlos como IOCs en MVT ]--
 
 Colander tiene una pieza clave para “sacar” lo que encontramos y **usarlo**: los **feeds**. Aquí vamos a usar **feeds de entidades** (no de reglas, eso queda para otro día). Por “entidades” nos referimos a lo que Colander modela en la UI (en inglés): **Actors, Artifacts, Devices, Observables, Threats**. La idea: exportar **Observables** y **Threats** de este caso, bajarlos en **STIX2** y apuntar **MVT** a ese archivo como fuente de IOCs.
 
