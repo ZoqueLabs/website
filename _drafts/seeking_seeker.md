@@ -44,13 +44,13 @@ We did the hunt with **Censys** and **Shodan** (free versions). Think Google, bu
 
 Of course: detecting is not enough if we cannot share. That is why we organize, classify and standardize information so that it serves sister organizations. With previous experience in [Colander](https://pts-project.org/colander-companion/) —free case management software—, we set up the case and leverage features that help us turn data into actionable **intelligence**. Additionally, we enable **feeds** to export STIX2 rules that can then be consumed in MVT.
 
-This writing comes loaded: hacking tools, infrastructure tracking, ephemeral VMs, tunnels, *proxies*, IOCs, Colander, MVT, OpSec and, yes, everything to the gratin! So clean your terminals: we are going to get them dirty. Come on!
+This writing comes loaded: hacking tools, infrastructure tracking, ephemeral VMs, tunnels, *proxies*, IOCs, Colander, MVT, OpSec and, yes, everything free! So clean your terminals: we are going to get them dirty. Come on!
 
 
 ## --[ 0x01 Understanding Seeker ]--
 
 ### 0x01.1 The basics
-[Seeker](https://github.com/thewhiteh4t/seeker) is a tool that you use with browser _APIs_ to extract precise location and other data from the device. It was created to perform _geolocation phishing_, that is, tricking a target into sharing their real location through the browser. But that's not all, it also collects device metadata such as model, screen resolution, operating system, network and more. It does not install anything, it does not exploit vulnerabilities, it does not mess with the operating system. Just wait for the victim to enter a link and give the browser permission to share the location. With that, Seeker does his job.
+[Seeker](https://github.com/thewhiteh4t/seeker) is a tool that you use with browser _APIs_ to extract precise location and other data from the device. It was created to perform _geolocation phishing_, that is, tricking a target into sharing their real location through the browser. But that's not all, it also collects device metadata such as model, screen resolution, operating system, network and more. It does not install anything, it does not exploit vulnerabilities, it does not mess with the operating system. Just wait for the victim to enter a link and give the browser permission to share the location. With that, Seeker does its job.
 
 On a technical level, Seeker builds a web server that serves a personalized page (such as Google Drive, Telegram groups, Whatsapp..). That page includes a JavaScript script that asks for location access using the HTML5 Geolocation API. When the browser allows it, Seeker captures:
 
@@ -61,7 +61,7 @@ On a technical level, Seeker builds a web server that serves a personalized page
 
 Then, in most cases, seeker redirects the victim to a legitimate page, thus trying to go unnoticed.
 
-Everything is stored and displayed in real time from the terminal. However, in our research, we noticed that even if the default browser denies Seeker geolocation, it still collects sensitive information such as: public IP, browser, operating system, device type, etc. This is what we mean when we talk about maintaining a good opsec during the search, so as not to provide information that could identify us. 
+Everything is stored and displayed in real time from the terminal. However, in our research, we noticed that even if the default browser denies Seeker geolocation, it still collects sensitive information such as: public IP, browser, operating system, device type, etc. This is what we mean when we talk about keeping a good opsec during the search, so as not to provide information that could identify us. 
 
 And this is where Seeker becomes relevant: it's simple and it works, and that's enough to show that social engineering is still effective. We know that many malicious campaigns, especially in Latin America, use very similar tactics: a link, a cloned website, and the browser doing the rest. Learning how Seeker operates allows you to see the attack from the inside, understand how it moves, reproduce it in controlled environments and begin to recognize patterns that could go unnoticed in a first analysis. Keep in mind that the complete information from the browser does appear in the logs.
 
@@ -83,13 +83,14 @@ The interesting thing is that you don't need to create accounts or register anyt
 ```bash
 ssh root@segfault.net
 ```
+&nbsp;
 
 By default, these machines die on their own after a while. But there's a trick: you can save your login credentials (the SSH key that's generated the first time), and if you reconnect within 72 hours, your session is still active. This allows you to resume experiments without starting from scratch, as long as you don't let too much time pass.
 
 When it finally falls, you just pick up another one and that's it.
 
 <p align="center">
-  <img src="/assets/images/exp0x02/1_Connecting_Segfault.png" />
+  <img src="/assets/images/exp0x02/1_Conectando_Segfault.png" />
 </p>
 ---
 
@@ -111,11 +112,12 @@ tmux new -s seeker # create session 'seeker'
 Ctrl-bd # detach
 tmux attach -t seeker # reconnect
 ```
+&nbsp;
 
 This gave us peace of mind that even if the SSH was cut, Seeker would continue running. It was just a matter of reconnecting and doing tmux attach.
 
 <p align="center">
-  <img src="/assets/images/exp0x02/2_Tmux_3_panels.png" />
+  <img src="/assets/images/exp0x02/2_Tmux_3_paneles.png" />
 </p>
 ---
 
@@ -125,11 +127,10 @@ With all this ready now, let's get to what we came for.
 
 - Clone the repo: Within segfault we are going to install seeker from the official repository in [github](https://github.com/thewhiteh4t/seeker), with the following command:
 
-
 ```bash
 git clone https://github.com/thewhiteh4t/seeker.git
 ```
-
+&nbsp;
 It should look like this:
 
 ```bash
@@ -143,9 +144,9 @@ remote: Total 1636 (delta 266), reused 249 (delta 249), pack-reused 1324 (from 2
 Receiving objects: 100% (1636/1636), 3.95 MiB | 3.10 MiB/s, done.
 Resolving deltas: 100% (836/836), donate.
 ```
+&nbsp;
 
-
-> It may not let you install if you have not prepared the VM in segfault, if you want you can pass the `apt update` first, `apt install python3 python3-pip curl` so that it does not throw errors at you. 
+> It may not let you install if you have not prepared the VM in segfault, if you want, you can pass the `apt update` first, `apt install python3 python3-pip curl` so that it does not throw errors at you. 
 
 
 <p align="center">
@@ -159,31 +160,29 @@ cd seeker
 chmod +x install.sh
 ./install.sh
 ```
-
+&nbsp;
 
 <p align="center">
-  <img src="/assets/images/exp0x02/4_Seeker_installed.png" />
+  <img src="/assets/images/exp0x02/4_Seeker_instalado.png" />
 </p>
-
 
 - Good there. Now let's run seeker from the `tmux` window.
 ```bash
 tmux new -s seeker
 ```
+&nbsp;
 
-Once inside we run seeker with:
+Once inside, we run seeker with:
 ```bash
 python3 seeker.py
 ```
-
+&nbsp;
 
 Here you can select an option: Google drive, Near You, WhatsApp, Telegram, etc. These are the __templates__ that Seeker has by default, the idea is to test them and collect information. When we choose a template it will ask us for some data such as redirection pages or images for WhatsApp groups. Once the template is configured, you should see logs in the console indicating that the server started and listens in `http://127.0.0.1:8080` (or in the port indicated). Additionally, when requests arrive, you will see real-time entries with IP/time/user-agent and, if you accept location, lat/long.
 
-
 <p align="center">
-  <img src="/assets/images/exp0x02/5_Seeker_running.png" />
+  <img src="/assets/images/exp0x02/5_Seeker_corriendo.png" />
 </p>
-
 
 With Seeker booting to `localhost:8080` we now have the service ready locally. Now the next step is to make that instance accessible from the outside, not to “fish people”, but to see how a real instance is presented from an external browser, analyze the requests and metadata it leaves, and extract reusable features for searches in Censys/Shodan. To do this, we set up a __reverse tunnel__ that will give us a public HTTPS URL that we will use only as a test hook in a controlled environment.
 
@@ -193,7 +192,7 @@ With Seeker booting to `localhost:8080` we now have the service ready locally. N
 
 Reverse tunnels create a bridge between the local VM port and a public URL in HTTPS; This is how we expose the Seeker that is already running out, just for testing.
 
-In this experiment we tested one of the options that a [The Hackers Choice repo](https://github.com/hackerschoice/thc-tips-tricks-hacks-cheat-sheet?tab=readme-ov-file#https) has with tricks of this type, but you can experiment with others.
+In this experiment we tested one of the options that [The Hackers Choice repo](https://github.com/hackerschoice/thc-tips-tricks-hacks-cheat-sheet?tab=readme-ov-file#https) has with tricks of this type, but you can experiment with others.
 
 🔹 **`localhost.run` with SSH**
 
@@ -204,7 +203,7 @@ In `tmux`, with the panel that Seeker is running, you open the tunnel panel with
 ```bash
 ssh -R80:0:8080 -or StrictHostKeyChecking=accept-new nokey@localhost.run
 ```
-
+&nbsp;
 What does this command do?
 - `-R80:0:8080`: asks the remote service to open port 80 and redirect it to `localhost:8080` on our VM.
 - `nokey@localhost.run`: user “guest” to create the tunnel.
@@ -232,20 +231,20 @@ Seeker was mounted and accessible via the tunnel's public URL; In the tmux sessi
 With the browser, if you are using a clean profile, open the public URL, here you should see the Seeker page.
 
 <p align="center">
-  <img src="/assets/images/exp0x02/8_Browser_requesting_location.png" />
+  <img src="/assets/images/exp0x02/8_Browser_solicitando_ubicacion.png" />
 </p>
 
 - If you accept location → Seeker will show the client's public IP, *user-agent*, *timestamp*, coordinates (lat, lon) and precision in meters.
 
 <p align="center">
-  <img src="/assets/images/exp0x02/9_Seeker_showing.png" />
+  <img src="/assets/images/exp0x02/9_Seeker_mostrando.png" />
 </p>
 
 - If you deny location → you will see that no coordinates appear, but IP, user-agent and other metadata (headers) do. This confirms that even without permission there is valuable information.
 
 
 <p align="center">
-  <img src="/assets/images/exp0x02/10_Seeker_showing_IP_without coordinates.png" />
+  <img src="/assets/images/exp0x02/10_Seeker_mostrando_IP_sin coords.png" />
 </p>
 ---
 
@@ -259,9 +258,9 @@ Now, let's get to work, first we go with OpSec and then to the fun, mapping.
 
 ## --[ 0x02 OpSec ]--
 
-Before you start searching, pause briefly. In this **yes** experiment we are going to come across malicious infrastructure and we want to be ready to **interact with it without giving away lab data or metadata**. Our minimum recipe is: **we take everything out by Segfault (THC) using a SOCKS5 via SSH** and work with a dedicated **browser with a clean profile**. If we need to “look like” a phone, we chain an HTTP**proxy** with `gost` so that an Android**emulator** uses the same output. It's simple, cool and serves as a template for future experiments.
+Before you start searching, pause briefly. In this experiment,**yes** we are going to come across malicious infrastructure and we want to be ready to **interact with it without giving away lab data or metadata**. Our minimum recipe is: **we take everything out by Segfault (THC) using a SOCKS5 via SSH** and work with a dedicated **browser with a clean profile**. If we need to “look like” a phone, we chain an HTTP**proxy** with `gost` so that an Android **emulator** uses the same output. It's simple, cool and serves as a template for future experiments.
 
-> It is not the only way. Also, in our case we use a **borrowed** VM: we don't control what is logged or monitored there, so for experiments with more **dangerous** infrastructure this setting might fall short, so always do a **assessment of risk** —what a third party might see and if you mind them seeing it— and decide accordingly. There are alternative routes (VPN, Tor, containers, disposable VMs, etc.); We chose this one because it is **quick to assemble** and **easy to reuse**.
+> It is not the only way. Also, in our case we use a **borrowed** VM: we don't control what is logged or monitored there, so for experiments with more **dangerous** infrastructure this setting might fall short, so always do a **assessment of risk** —what a third party might see and if you mind them seeing it— and decide accordingly. There are alternative routes (VPN, Tor, containers, disposable VMs, etc.); We chose this one because it is quick to assemble and easy to reuse.
 
 
 ---
@@ -275,7 +274,7 @@ Before you start searching, pause briefly. In this **yes** experiment we are goi
 ```bash
 ssh -D 1080 -or "SetEnv SECRET=YourSecretKey" root@lsd.segfault.net
 ```
-
+&nbsp;
 
 **Command (robust, with keepalive):**
 
@@ -287,7 +286,7 @@ ssh -D 1080 \
   -o ServerAliveCountMax=3 \
   root@lsd.segfault.net
 ```
-
+&nbsp;
 * `-D 1080`: Opens a SOCKS5 at `127.0.0.1:1080`.
 * Keepalive so the tunnel doesn't fall silently.
 
@@ -306,8 +305,8 @@ ssh -D 1080 \
   ```
   network.proxy.socks_remote_dns = true
   ```
-  
-- **Chromium/Chrome**: use a unique profile and define the proxy in the system options or via the command line if you need it, but remember that not all paths force DNS over SOCKS; If in doubt, use Firefox for this part.
+  &nbsp;
+- **Chromium/Chrome**: use a unique profile and define the proxy in the system options or via the command line if you need it, but remember that not all paths force DNS over SOCKS; If you doubt, use Firefox for this part.
 
 <p align="center">
   <img src="/assets/images/exp0x02/conf_socks5_ff.png" />
@@ -317,6 +316,7 @@ ssh -D 1080 \
 > Quick fingerprint tip: Browser language and time zone should be consistent with your strategy. If you don't need anything fancy, leave it at that.
 
 **(Optional) Intercept with ZAP/Burp**
+
 If you want to watch/edit traffic:
 
 *In **ZAP/Burp** configure **SOCKS5 → 127.0.0.1:1080**.
@@ -330,14 +330,14 @@ If you want to watch/edit traffic:
 
 ### 0x02.3 Branch “mobile”: Android emulator with `gost` (HTTP→SOCKS)
 
-**What is `gost`?**A lightweight tool (in Go) for **convert/chain** proxies. We use it to **translate HTTP ↔ SOCKS** so emulators (speaking **HTTP proxy**, not SOCKS) can take advantage of our tunnel.
+**What is `gost`?** A lightweight tool (in Go) for **convert/chain** proxies. We use it to **translate HTTP ↔ SOCKS** so emulators (speaking **HTTP proxy**, not SOCKS) can take advantage of our tunnel.
 
 **HTTP→SOCKS local bridge (on your computer):**
 
 ```bash
 gost -L=http://127.0.0.1:8081 -F=socks5://127.0.0.1:1080
 ```
-
+&nbsp;
 * `-L=http://127.0.0.1:8081` opens a local **HTTP** proxy at `:8081`.
 * `-F=socks5://127.0.0.1:1080` chains it to **SOCKS5** of the SSH.
 
@@ -367,20 +367,20 @@ Use the emulator tools to **set coordinates** and test how Seeker records locati
                  SSH -D 1080 (SOCKS5 local)
                            │
             ┌──────────────┴───────────────┐
-            │ │
-            │ DESKTOP ROUTE │ MOBILE ROUTE
-            │ (Clean Browser) │ (Android Emulator)
-            │ │
-     Browser → (ZAP/Burp optional) Emulator
-            │ │
-            │ gost HTTP :8081 → SOCKS5 :1080
+            │                              │
+            │ DESKTOP ROUTE                │ MOBILE ROUTE
+            │ (Clean Browser)              │ (Android Emulator)
+            │                              │
+     Browser → (ZAP/Burp optional)         Emulator
+            │                              │
+            │                     gost HTTP :8081 → SOCKS5 :1080
             └──────────────┬───────────────┘
                            │
                         segfault
                            │
                 Seeker Infrastructure
 ```
-
+&nbsp;
 
 
 ### Closing notes
@@ -388,19 +388,19 @@ Use the emulator tools to **set coordinates** and test how Seeker records locati
 *With this string, *everything* comes out by segfault; your lab network doesn't show its head.
 * The dedicated browser avoids mixing cookies/extensions/language/zone in your daily life.
 * The mobile branch with `gost` lets you test “as a phone” without exposing the host and with simulated location. **It is our recommendation for this experiment.**
-* If your case asks for something else (VMs, Tor, VPN), change it without penalty. This is our base recommendation because it is short, practical and reusable for what is to come.
+* If your case asks for something else (VMs, Tor, VPN), change it. This is our base recommendation because it is short, practical and reusable for what is to come.
 
 ---
 
 ## --[ 0x03 On the hunt (favicons first) ]--
 
-First, the tools. **Censys** and **Shodan** do not “read” pages like a normal search engine: they index **service metadata** (banners, headers, certificates, HTML titles, favicons...). That's why they serve us so much here: **Seeker** recycles templates with very recognizable **favicons** and **titles**; If you catch one, it is common for several more to come out. For fine queries, Censys exposes a field-level search language ([CenQL](https://docs.censys.com/docs/censys-query-language)), and yes, you can filter by *favicons.hashes* or *html\_title*; [Shodan has its own syntax](https://help.shodan.io/the-basics/search-query-fundamentals).
+First, the tools. **Censys** and **Shodan** do not “read” pages like a normal search engine: they index **service metadata** (banners, headers, certificates, HTML titles, favicons...). That's why they are perfect for us here: **Seeker** recycles templates with very recognizable **favicons** and **titles**; If you catch one, it is common for several more to come out. For fine queries, Censys exposes a field-level search language ([CenQL](https://docs.censys.com/docs/censys-query-language)), and yes, you can filter by *favicons.hashes* or *html\_title*; [Shodan has its own syntax](https://help.shodan.io/the-basics/search-query-fundamentals).
 
 ### Access levels
 
 * **No account**: you browse little.
 * **Free account**: more results, but with **credits** and visible limits (open extra pages, use API, etc.). 
-* **Paid**: much broader and, above all, **historical** quotas: see “when” something was observed, compare states over time, etc. (useful for correlating campaigns). Here we will not use historical payments, but they exist and are gold in long investigations. For Shodan, access also goes through **query credits** (filters, paginar... spend). 
+* **Paid**: much broader and, above all, **historical** quotas: see “when” something was observed, compare states over time, etc. (useful for correlating campaigns). Here we will not use historical payments, but they exist and are gold in long investigations. For Shodan, access also goes through **query credits** (filters,etc... spend). 
 
 > Mini-tip: In Shodan, the filter by favicon *does not* use SHA-256; use **MurmurHash3 (mmh3)** on the favicon. Don't mix the hashes or get frustrated.
 
@@ -422,22 +422,23 @@ $sha256sum favicon.ico
 4673c3ef82f32e37d0021d3683b5c132dbab0942e7137427fc9716235289c678 favicon.ico
 $   
 ```
+&nbsp;
 
 With the hash ready, in **Censys** (https://search.censys.io/) we look like this (use the prefix `sha256:` as is):
 
 ```text
 services.http.response.favicons.hashes="sha256:4673c3ef82f32e37d0021d3683b5c132dbab0942e7137427fc9716235289c678"
 ```
+&nbsp;
 
-
-That field exists and accepts “`sha256:<hex>`” as a value; If in doubt, open any host and watch Censys name it in its panel.
+That field exists and accepts “`sha256:<hex>`” as a value; If you doubt, open any host and watch Censys name it in its panel.
 
 <p align="center">
-  <img src="/assets/images/exp0x02/censys_results_favicon_captcha.png" />
+  <img src="/assets/images/exp0x02/censys_resultados_favicon_captcha.png" />
 </p>
 ---
 
-#### 0x03.1.1 What we saw in the first shot
+#### 0x03.1.1 What we saw in the first shot?
 
 With that search we came up with several **instances**. In one of them (which we will use as an example) Censys showed that the Seeker service was last observed on **September 4, 2025**, while other services on the same host are still active at the time of writing (10 days later). That temporal contrast is just the kind of clue that helps understand whether they **turned off**, **switched**, or **tuned** anything.
 
@@ -456,7 +457,7 @@ When the favicon is gone (or disappears), the hash stops working. There it's tim
 1. On Seeker's **service tab**, click **“View all data”**.
 2. In the table, locate the `html_title` field (it should look like this):
    `services.http.response.html_title = "Are you a robot ?"`
-3. To the left of that value is a **lupita**. Click and Censys will set up a search for that same title throughout its dataset.
+3. To the left of that value is a **small loupe**. Click on it, and Censys will set up a search for that same title throughout its dataset.
 4. Execute. Another instance of Seeker reCAPTCHA will appear. This one didn't come out with the favicon because it doesn't have one (or it was deleted), but the title gives it away.
 
 <p align="center">
@@ -468,6 +469,7 @@ If you prefer to run it by hand:
 ```text
 services.http.response.html_title="Are you a robot\?"
 ```
+&nbsp;
 
 
 (The `html_title` field is searchable; Censys documents it and you can use quotes for exact matching).
@@ -484,8 +486,9 @@ If your hash returns too many sites (including legitimate ones), add traits that
 ```text
 services.http.response.favicons.hashes="sha256:1e289014599c6f2946595fd9f744506d9656e14fe69625d91293bf92eb8dfa85" and services.http.response.headers: (key: `Connection` and value.headers: `close`)
 ```
+&nbsp;
 
-*(Exact field names may vary by dataset; copy them as they appear on the host tab.).* 
+*(Exact field names may change by dataset; copy them as they appear on the host tab.).* 
 
 <p align="center">
   <img src="/assets/images/exp0x02/censys_connection_close.png" />
@@ -521,7 +524,7 @@ With the title validated, we look for it in Shodan as is:
 ```text
 http.title:"Near You | Meet New People, Make New Friends"
 ```
-
+&nbsp;
 
 Noise is going to come out, it's normal, there are innocent services that match by text. What interests us is the host where the title **fits literally** and, when opening the tab, we find the **port/service** where Seeker runs.
 
@@ -546,7 +549,7 @@ Above the service block you will see a green **badge**. Click there and several 
   <img src="/assets/images/exp0x02/shodan_results_title_hash.png" />
 </p>
 
-With that we learn two things: (1) when there is no favicon, the title is still a solid hook; (2) pivoting from the detail of a service to its fingerprint (hash of the title), we lower the noise to almost zero without leaving the interface itself.
+With that, we learn two things: (1) when there is no favicon, the title is still a solid hook; (2) pivoting from the detail of a service to its fingerprint (hash of the title), we lower the noise to almost zero without leaving the interface itself.
 
 ---
 
@@ -562,12 +565,12 @@ This is where it stops being “looking for chains” and real intelligence begi
 
 * **Tie content to campaigns**: If the phishing page always redirects to a certain specific form, domain, or *landing*, you already have an operational **link**. That is enough to raise an alert for a specific group or region.
 * **Look at the map**: filtering by **country/ASN/organization** reveals whether things are concentrated in specific suppliers or areas. If the same title appears in repeated ASNs, it is a shared **infra track**.
-* **Certificates/TLS** (for other wiriteup): strings, emitters and cert traces are usually **gold** to join infra disperse. We don't touch it here so as not to open another melon.
+* **Certificates/TLS** (for other write-up): strings, emitters and cert traces are usually **gold** to join infra disperse. We don't touch it here so as not to open another chapter.
 * **Time**: **historical** (usually paid) let you see **when** a trait appeared or disappeared. That helps sew **campaigns** and, if there are previous posts, even plausible **attribution**. We won't use it here, but it's the tool you'll want when this escalates.
 
 ---
 
-We close with the same invitation as always: this barely scratches the surface of what Censys and Shodan allow. We don't come to invent anything: we come to show how we are doing it while we learn. What we hope is that curiosity is piqued and eyes are added. Adversaries play seriously; We have to respond the same.
+We close with the same invitation as always: this barely scratches the surface of what Censys and Shodan allow. We don't come to invent anything: we come to show how we are doing it while we learn. What we hope is that it piques curiosity and attracts attention. Adversaries play seriously; We have to respond the same.
 
 ---
 
@@ -619,7 +622,7 @@ Also, as in Censys, we have the magnifying glass to __privote__, in this case we
 But we have another important piece of information here, a "reverse dns" that does not appear in the observables that the IP investigation in Colander showed us, we can use the same investigation tool and see what Colander finds for that domain, let's see:
 
 <p align="center">
-  <img src="/assets/images/exp0x02/colander-domain-malicious-events.png" />
+  <img src="/assets/images/exp0x02/colander-dominio-maliciosos-eventos.png" />
 </p>
 
 

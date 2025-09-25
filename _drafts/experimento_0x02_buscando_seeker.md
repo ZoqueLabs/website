@@ -380,7 +380,7 @@ Usa las herramientas del emulador para **fijar coordenadas** y probar cómo Seek
                            │
                 Infraestructura Seeker
 ```
-
+&nbsp;
 
 
 ### Notas de cierre
