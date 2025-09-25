@@ -31,8 +31,6 @@ Este escrito se distribuye con una licencia Creative Commons CC BY-SA (Reconocim
 
 ## --\[ 0x00 Intro ]--
 
-### Saludos
-
 ¡Saludos, gente!
 
 En ZoqueLabs nos encanta la inteligencia de amenazas, y este es nuestro primer *write-up* sobre el tema. Después de meternos a fondo en [las tripas de Android](https://zoquelabs.xyz/android/forense/exploit/2025/06/05/Escribiendo-exploit-Android-MVT.html), cambiamos de aire para oler un poco de TCP/IP y arrancar un experimento básico pero potente: aprender a buscar y rastrear infraestructura maliciosa.
@@ -64,7 +62,7 @@ Luego, en la mayoría de los casos, seeker redirecciona a la víctima a una pág
 
 Todo se almacena y se muestra en tiempo real desde la terminal. Sin embargo, en nuestra investigación, nos fijamos que incluso si el navegador por default le niega la geolocalización a Seeker, este igual recolecta información sensble como: IP pública, navegador, sistema operativo, tipo de dispositivo, etc. A esto nos referimos cuando hablamos de mantener un buen opsec durante la búsqueda, para no entregar información que nos pueda identificar. 
 
-Y acá es donde Seeker se vuelve relevante: es simple y funciona, y eso basta para demostrar que la ingeniería social sigue siendo efectiva. Sabemos que muchas campañas maliciosas, especialmente en América Latina, usan tácticas muy parecidas: un enlace, una web clonada, y el navegador haciendo el resto. Aprender cómo opera Seeker permite ver el ataque desde adentro, entender cómo se mueve, reproducirlo en entornos controlados y empezar a reconocer patrones que podrían pasar desapercibidos en un primer análisis. Ten presente que en los logs si sale la informacion completa del cliente web.
+Y acá es donde Seeker se vuelve relevante: es simple y funciona, y eso basta para demostrar que la ingeniería social sigue siendo efectiva. Sabemos que muchas campañas maliciosas, especialmente en América Latina, usan tácticas muy parecidas: un enlace, una web clonada, y el navegador haciendo el resto. Aprender cómo opera Seeker permite ver el ataque desde adentro, entender cómo se mueve, reproducirlo en entornos controlados y empezar a reconocer patrones que podrían pasar desapercibidos en un primer análisis. Ten presente que en los logs si sale la informacion completa del navegador.
 
 Bueno sin más preambulo, ahora si vamos a correr Seeker.
 
@@ -77,7 +75,7 @@ Antes de correrlo, recomendamos hacerlo siempre desde un entorno controlado: una
 
 #### 0x01.2.1 Segfault
 
-Segfault es un servicio de servidores temporales efímeros: máquinas Linux que puedes levantar con un solo comando y que desaparecen al cabo de unas horas. Son perfectas para pruebas rápidas, experimentos controlados y —como en este caso— correr herramientas sin ensuciar tu propio equipo.
+Segfault es un servicio de servidores temporales efímeros: máquinas Linux que puedes levantar con un solo comando y que desaparecen al cabo de unos dias. Son perfectas para pruebas rápidas, experimentos controlados y —como en este caso— correr herramientas sin ensuciar tu propio equipo.
 
 Lo interesante es que no necesitas crear cuentas ni registrar nada. Un solo comando vía ssh te da acceso inmediato a un servidor con red pública. Eso significa que puedes usarlo como espacio de pruebas, como puente (proxy) o incluso como punto de salida para túneles reversos.
 
@@ -88,12 +86,6 @@ ssh root@segfault.net
 Por defecto, estas máquinas mueren solas después de un tiempo. Pero hay un truco: puedes guardar tus credenciales de acceso (la clave SSH que se genera la primera vez) y, si vuelves a conectarte antes de 72 horas, tu sesión sigue activa. Esto te permite retomar experimentos sin empezar desde cero, siempre que no dejes pasar demasiado tiempo.
 
 Cuando finalmente cae, simplemente levantas otra y ya esta.
-
-Notas, problemas tipicos y fix:
-- No pongas datos reales en la VM: todo lo que crees ahí debe ser reproducible y desechable.
-- git no instalado: apt update & apt install -y git.
-- python3 faltante: apt install -y python3 python3-pip.
-- sin salida a internet: la VM caducó o el nodo está caído → reconectar a otro host de segfault.
 
 <p align="center">
   <img src="/assets/images/exp0x02/1_Conectando_Segfault.png" />
@@ -106,7 +98,6 @@ Notas, problemas tipicos y fix:
 
 - Panel 1: Evitar que Seeker muera si perdemos la conexión.
 - Panel 2: el túnel HTTPS
-- Panel 3: Ver logs sin cerrar el servidor (solo si quieres)
 
 Comandos básicos que usamos:
 
@@ -201,7 +192,7 @@ Con Seeker arrancando en `localhost:8080` ya tenemos el servicio listo localment
 
 Los túneles reversos, crean un puente entre el puerto local de la VM y una URL pública en HTTPS; así exponemos el Seeker que ya está corriendo hacia afuera, solo para pruebas.
 
-En este experimento probamos una de las opciones que tiene el repo de [The Hackers Choice](https://github.com/hackerschoice/thc-tips-tricks-hacks-cheat-sheet?tab=readme-ov-file#https), pero tu puedes experimentar con otras.
+En este experimento probamos una de las opciones que tiene un [repo de The Hackers Choice](https://github.com/hackerschoice/thc-tips-tricks-hacks-cheat-sheet?tab=readme-ov-file#https) con trucos de este tipo, pero tu puedes experimentar con otras.
 
 🔹 **`localhost.run` con SSH**
 
@@ -226,12 +217,6 @@ Qué deberías ver: una URL pública tipo `https://randomsub.localhost.run` que 
 
 Este método tiene algunos pros y contras, por un lado es super fácil de montar y no instala nada en la VM, pero puede ser que el servicio sea inestable y limitado, y también puede ser que cambie la URL cada vez que la corres, pero nos funciona para el experimento, asi que vamos.
 
-> Layout recomendado para `tmux`:
-> - Panel A (izquierda, grande): Seeker (servidor local).
-> - Panel B (derecha, arriba): túnel HTTPS (`localhost.run`).
-> - Panel C (derecha, abajo): logs / debugging (tcpdump, tail -f, etc.). Esta opción es muy útil para para ver más detalles del tráfico HTTP, headers o para depurar, pero ya sabes, es opcional. Acá solo vamos a mostrar A y B.
-
-
 <p align="center">
   <img src="/assets/images/exp0x02/7_tmux_layout.png" />
 </p>
@@ -239,11 +224,11 @@ Este método tiene algunos pros y contras, por un lado es super fácil de montar
 
 ### 0x01.5 Seeker listo
 
-Seeker quedó montado y accesible vía la URL pública del túnel; en la sesión de tmux dejamos el panel A con Seeker y el panel B con el túnel HTTPS. Con la URL ya podemos abrir la instancia desde un navegador limpio o un emulador y ver en vivo qué captura la plantilla (coords si aceptan, o metadata si niegan).
+Seeker quedó montado y accesible vía la URL pública del túnel; en la sesión de tmux dejamos el panel A con Seeker y el panel B con el túnel HTTPS. Con la URL ya podemos abrir la instancia desde un navegador limpio o un emulador y ver en vivo qué captura la plantilla (coords si aceptan, y/o metadata si niegan).
 
 ---
 #### Pruebas
-Con el navegador del host si estás usando un perfil limpio, abre la URL pública, acá ya deberías ver la página de Seeker.
+Con el navegador, si estás usando un perfil limpio, abre la URL pública, acá ya deberías ver la página de Seeker.
 
 <p align="center">
   <img src="/assets/images/exp0x02/8_Browser_solicitando_ubicacion.png" />
@@ -265,7 +250,7 @@ Con el navegador del host si estás usando un perfil limpio, abre la URL públic
 
 #### De Seeker al hunting
 
-Ver que Seeker funciona es solo el primer paso. Lo que realmente nos interesa es sacar huellas que podamos reusar para cazar otras instancias: el favicon (`/favicon.ico`) actúa como un mini-fingerprint para correlación; el `HTML title` suele delatar plantillas enteras; **los headers / banners HTTP** (Server, Connection, redirecciones) ayudan a filtrar ruido y agrupar hosts hermanados; las rutas y plantillas (JS/CSS, paths estáticos) son huellas que se repiten y dejan rastros como migas de pan; y el combo certificados/TLS + IP/ASN nos da contexto de hosting y posibles clusters operativos. Con estos artefactos armamos queries en Censys/Shodan y documentamos todo en Colander para generar IOCs listos para exportar —esto es investigación práctica, no curiosidad casual-. 
+Ver que Seeker funciona es solo el primer paso. Lo que realmente nos interesa es sacar huellas que podamos reusar para cazar otras instancias: el favicon (`/favicon.ico`) actúa como un mini-fingerprint para correlación; el `HTML title` suele delatar plantillas enteras; **los headers / banners HTTP** (Server, Connection, redirecciones) ayudan a filtrar ruido y agrupar hosts hermanados; las rutas y plantillas (JS/CSS, paths estáticos) son huellas que se repiten y dejan rastros como migas de pan; y el combo certificados/TLS + IP/ASN nos da contexto de hosting y posibles clusters operativos. Con estos artefactos armamos _consultas_ en Censys/Shodan y documentamos todo en Colander para generar IOCs listos para exportar —esto es investigación práctica, no curiosidad casual-. 
 
 Ahora sí, manos a la obra, primero nos vamos con OpSec y luego a lo divertido, el mapeo.
 
@@ -273,7 +258,7 @@ Ahora sí, manos a la obra, primero nos vamos con OpSec y luego a lo divertido, 
 
 ## --[ 0x02 OpSec ]--
 
-Antes de empezar a buscar, una pausa breve. En este experimento **sí** vamos a toparnos con infraestructura maliciosa y queremos estar listxs para **interactuar con ella sin regalar datos o metadatos del lab**. Nuestra receta mínima es: **sacamos todo por segfault (THC) usando un SOCKS5 via SSH** y trabajamos con un **navegador dedicado con perfil limpio**. Si necesitamos “parecer” un teléfono, encadenamos un **proxy HTTP** con `gost` para que un **emulador Android** use la misma salida. Es simple, chévere y nos sirve de plantilla para futuros experimentos.
+Antes de empezar a buscar, una pausa breve. En este experimento **sí** vamos a toparnos con infraestructura maliciosa y queremos estar listxs para **interactuar con ella sin regalar datos o metadatos del lab**. Nuestra receta mínima es: **sacamos todo por Segfault (THC) usando un SOCKS5 via SSH** y trabajamos con un **navegador dedicado con perfil limpio**. Si necesitamos “parecer” un teléfono, encadenamos un **proxy HTTP** con `gost` para que un **emulador Android** use la misma salida. Es simple, chévere y nos sirve de plantilla para futuros experimentos.
 
 > No es la única forma. Además, en nuestro caso usamos una VM **prestada**: no controlamos qué se registra o monitorea allí, así que para experimentos con infraestructura más **peligrosa** esta configuración podría quedarse corta, así que haz siempre una **evaluación de riesgo** —qué podría ver un tercero y si te importa que lo vea— y decide en consecuencia. Existen rutas alternativas (VPN, Tor, contenedores, VMs desechables, etc.); elegimos esta porque es **rápida de montar** y **fácil de reutilizar**.
 
@@ -287,7 +272,7 @@ Antes de empezar a buscar, una pausa breve. En este experimento **sí** vamos a 
 **Comando (mínimo):**
 
 ```bash
-ssh -D 1080 -o "SetEnv SECRET=TuLlavESecreta" root@lsd.segfault.net
+ssh -D 1080 -o "SetEnv SECRET=TuLlaveSecreta" root@lsd.segfault.net
 ```
 &nbsp;
 
@@ -295,7 +280,7 @@ ssh -D 1080 -o "SetEnv SECRET=TuLlavESecreta" root@lsd.segfault.net
 
 ```bash
 ssh -D 1080 \
-  -o "SetEnv SECRET=TuLlavESecreta" \
+  -o "SetEnv SECRET=TuLlaveSecreta" \
   -o ExitOnForwardFailure=yes \
   -o ServerAliveInterval=60 \
   -o ServerAliveCountMax=3 \
