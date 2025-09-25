@@ -14,7 +14,8 @@ lang: es
 Por: ZoqueLabs
 <br>
 <br>
-Este escrito se distribuye con una licencia Creative Commons CC BY-SA (Reconocimiento - Compartir Igual). Fue realizado con el apoyo de [Derechos Digitales](https://www.derechosdigitales.org/en/home/). 
+Este escrito se distribuye con una licencia Creative Commons CC BY-SA (Reconocimiento - Compartir Igual). Fue realizado con el apoyo de <a href="https://www.derechosdigitales.org/en/home/">Derechos Digitales</a>. 
+<br> 
 <br>
 <a href="">English version</a>
 </div>
