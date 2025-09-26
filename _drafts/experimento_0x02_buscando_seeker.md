@@ -97,7 +97,7 @@ Cuando finalmente cae, simplemente levantas otra y ya esta.
 
 `tmux` es un _multiplexor de bolsillo_, es lo que evita que pierdas todo cuando el SSH se cae. Imaginemos a tmux como varias pantallas dentro de una sola conexión: Seeker en una, túnel en otra, pruebas y logs en otra. Si la conexión se rompe, la sesión sigue viva y puedes volver a conectarte. Aquí lo usamos para:
 
-- Panel 1: Corre Seeker y evitaa que muera si perdemos la conexión.
+- Panel 1: Corre Seeker y evita que muera si perdemos la conexión.
 - Panel 2: el túnel HTTPS
 
 Comandos básicos que usamos:
@@ -562,7 +562,7 @@ Aquí es donde deja de ser “buscar cadenas” y empieza la inteligencia de ver
 
 * **Atar contenido a campañas**: si la página de phishing redirige siempre a cierto formulario, dominio o *landing* específico, ya tienes un **vínculo operativo**. Eso alcanza para levantar una alerta a un colectivo o región concreta.
 * **Mirar el mapa**: filtrar por **país/ASN/organización** revela si la cosa se concentra en proveedores o zonas concretas. Si el mismo título aparece en ASNs repetidos, es una pista de **infra compartida**.
-* **Certificados/TLS** (para otro wiriteup): cadenas, emisores y huellas de cert suelen ser **oro** para unir infra dispersa. Aquí no lo tocamos para no abrir otro melón.
+* **Certificados/TLS** (para otro write-up): cadenas, emisores y huellas de cert suelen ser **oro** para unir infra dispersa. Aquí no lo tocamos para no abrir otro melón.
 * **Tiempo**: los **históricos** (normalmente de pago) te dejan ver **cuándo** apareció o desapareció un rasgo. Eso ayuda a coser **campañas** y, si hay publicaciones previas, hasta **atribución** plausible. No lo usaremos aquí, pero es la herramienta que querrás cuando esto escale.
 
 ---
