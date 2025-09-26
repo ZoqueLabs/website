@@ -50,7 +50,7 @@ This writing comes loaded: hacking tools, infrastructure tracking, ephemeral VMs
 ## --[ 0x01 Understanding Seeker ]--
 
 ### 0x01.1 The basics
-[Seeker](https://github.com/thewhiteh4t/seeker) is a tool that you use with browser _APIs_ to extract precise location and other data from the device. It was created to perform _geolocation phishing_, that is, tricking a target into sharing their real location through the browser. But that's not all, it also collects device metadata such as model, screen resolution, operating system, network and more. It does not install anything, it does not exploit vulnerabilities, it does not mess with the operating system. Just wait for the victim to enter a link and give the browser permission to share the location. With that, Seeker does its job.
+[Seeker](https://github.com/thewhiteh4t/seeker) is a tool that you use  browser _APIs_ to extract precise location and other data from the device. It was created to perform _geolocation phishing_, that is, tricking a target into sharing their real location through the browser. But that's not all, it also collects device metadata such as model, screen resolution, operating system, network and more. It does not install anything, it does not exploit vulnerabilities, it does not mess with the operating system. Just wait for the victim to enter a link and give the browser permission to share the location. With that, Seeker does its job.
 
 On a technical level, Seeker builds a web server that serves a personalized page (such as Google Drive, Telegram groups, Whatsapp..). That page includes a JavaScript script that asks for location access using the HTML5 Geolocation API. When the browser allows it, Seeker captures:
 
@@ -98,7 +98,7 @@ When it finally falls, you just pick up another one and that's it.
 
 `tmux` is a _pocket multiplexer_, it is what prevents you from losing everything when the SSH goes down. Let's imagine tmux as several screens within a single connection: Seeker in one, tunnel in another, tests and logs in another. If the connection is broken, the session is still alive and you can reconnect. Here we use it to:
 
-- Panel 1: Prevent Seeker from dying if we lose the connection.
+- Panel 1: Running Seeker and Prevent it from dying if we lose the connection.
 - Panel 2: the HTTPS tunnel
 
 Basic commands we use:
@@ -106,10 +106,10 @@ Basic commands we use:
 ```bash
 tmux new -s seeker # create session 'seeker'
 # inside tmux:
-# split horizontal: Ctrl-b"
+# split horizontal: Ctrl-b "
 # split vertical: Ctrl-b %
-# move between panels: Ctrl-bo
-Ctrl-bd # detach
+# move between panels: Ctrl-b o
+Ctrl-b d # detach
 tmux attach -t seeker # reconnect
 ```
 &nbsp;
@@ -192,13 +192,13 @@ With Seeker booting to `localhost:8080` we now have the service ready locally. N
 
 Reverse tunnels create a bridge between the local VM port and a public URL in HTTPS; This is how we expose the Seeker that is already running out, just for testing.
 
-In this experiment we tested one of the options that [The Hackers Choice repo](https://github.com/hackerschoice/thc-tips-tricks-hacks-cheat-sheet?tab=readme-ov-file#https) has with tricks of this type, but you can experiment with others.
+In this experiment we tested one of the options that a [The Hackers Choice repo](https://github.com/hackerschoice/thc-tips-tricks-hacks-cheat-sheet?tab=readme-ov-file#https) has with tricks of this type, but you can experiment with others.
 
 🔹 **`localhost.run` with SSH**
 
 It is the fastest way because you don't need to install anything additional, just use SSH.
 
-In `tmux`, with the panel that Seeker is running, you open the tunnel panel with `Ctrl-b %` (if you want it vertical) and you can use `Ctrl-b or` to move between panels. Here you just put the command:
+In `tmux`, in the panel that Seeker is running, you open the tunnel panel with `Ctrl-b %` (if you want it vertical) and you can use `Ctrl-b o` to move between panels. Here you just put the command:
 
 ```bash
 ssh -R80:0:8080 -or StrictHostKeyChecking=accept-new nokey@localhost.run
@@ -258,14 +258,14 @@ Now, let's get to work, first we go with OpSec and then to the fun, mapping.
 
 ## --[ 0x02 OpSec ]--
 
-Before you start searching, pause briefly. In this experiment,**yes** we are going to come across malicious infrastructure and we want to be ready to **interact with it without giving away lab data or metadata**. Our minimum recipe is: **we take everything out by Segfault (THC) using a SOCKS5 via SSH** and work with a dedicated **browser with a clean profile**. If we need to “look like” a phone, we chain an HTTP**proxy** with `gost` so that an Android **emulator** uses the same output. It's simple, cool and serves as a template for future experiments.
+Before you start searching, pause briefly. In this experiment,**we are going to come across malicious infrastructure** and we want to be ready to **interact with it without giving away lab data or metadata**. Our minimum recipe is: **we take everything out by Segfault (THC) using a SOCKS5 via SSH** and work with a dedicated **browser with a clean profile**. If we need to “look like” a phone, we chain an HTTP **proxy** with `gost` so that an Android **emulator** uses the same tunnel. It's simple, cool and serves as a template for future experiments.
 
-> It is not the only way. Also, in our case we use a **borrowed** VM: we don't control what is logged or monitored there, so for experiments with more **dangerous** infrastructure this setting might fall short, so always do a **assessment of risk** —what a third party might see and if you mind them seeing it— and decide accordingly. There are alternative routes (VPN, Tor, containers, disposable VMs, etc.); We chose this one because it is quick to assemble and easy to reuse.
+> It is not the only way. Also, in our case we use a **borrowed** VM: we don't control what is logged or monitored there, so for experiments with more **dangerous** infrastructure this setting might fall short, so always do an **assessment of risk** —what a third party might see and if you mind them seeing it— and decide accordingly. There are alternative routes (VPN, Tor, containers, disposable VMs, etc.); We chose this one because it is quick to assemble and easy to reuse.
 
 
 ---
 
-### 0x02.1 Output by segfault with SOCKS5 (SSH)
+### 0x02.1 Connecting by segfault with SOCKS5 (SSH)
 
 **What it does:** creates a local **SOCKS5 proxy** that tunnel your traffic to segfault. Thus, the destination sees **the IP/ASN of segfault**, not that of your lab network.
 
@@ -385,7 +385,7 @@ Use the emulator tools to **set coordinates** and test how Seeker records locati
 
 ### Closing notes
 
-*With this string, *everything* comes out by segfault; your lab network doesn't show its head.
+*With this chain, *everything* comes out by segfault; your lab network doesn't show its head.
 * The dedicated browser avoids mixing cookies/extensions/language/zone in your daily life.
 * The mobile branch with `gost` lets you test “as a phone” without exposing the host and with simulated location. **It is our recommendation for this experiment.**
 * If your case asks for something else (VMs, Tor, VPN), change it. This is our base recommendation because it is short, practical and reusable for what is to come.

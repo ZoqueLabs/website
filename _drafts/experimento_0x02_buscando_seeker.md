@@ -97,7 +97,7 @@ Cuando finalmente cae, simplemente levantas otra y ya esta.
 
 `tmux` es un _multiplexor de bolsillo_, es lo que evita que pierdas todo cuando el SSH se cae. Imaginemos a tmux como varias pantallas dentro de una sola conexión: Seeker en una, túnel en otra, pruebas y logs en otra. Si la conexión se rompe, la sesión sigue viva y puedes volver a conectarte. Aquí lo usamos para:
 
-- Panel 1: Evitar que Seeker muera si perdemos la conexión.
+- Panel 1: Corre Seeker y evitaa que muera si perdemos la conexión.
 - Panel 2: el túnel HTTPS
 
 Comandos básicos que usamos:
