@@ -683,8 +683,8 @@ Colander has a key piece to “get out” what we found and **use it**: the **fe
 
    * **TLP (Traffic Light Protocol)** defines **how what is exported can be shared**.
    * **PAP (Permissible Actions Protocol)** defines **what can be done** with what is exported.
-   *The feed will **only** include entities whose **TLP/PAP** is greater than or equal to what you select here. If you select "WHITE" only the __whites__ will appear, if at the other end you select the "RED" all will appear: the red, yellow, green and white.
-   *In this experiment we left **both in `WHITE`**, so **no** entities labeled as `YELLOW` are exported (we have some like that because they came from a legitimate server that was compromised and we prefer **no** to publish them as IOCs).
+   * The feed will **only** include entities whose **TLP/PAP** is greater than or equal to what you select here. If you select "WHITE" only the __whites__ will appear, if at the other end you select the "RED" all will appear: the red, yellow, green and white.
+   * In this experiment we left **both in `WHITE`**, so **no** entities labeled as `YELLOW` are exported (we have some like that because they came from a legitimate server that was compromised and we prefer **no** to publish them as IOCs).
    
 <p align="center">
   <img src="/assets/images/exp0x02/feeds_new_feed.png" />
