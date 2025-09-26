@@ -140,7 +140,7 @@ La sección [_colecciones_](https://blog.virustotal.com/2021/11/introducing-viru
 
 **Crear una colección paso a paso**
 
-1. Ingresa a Visrus total, crea una cuenta o logueate si ya tienes una.
+1. Ingresa a Virus total, crea una cuenta o logueate si ya tienes una.
 2. Puedes dar clic en el icono de busqueda en VT o dar clic [acá](https://www.virustotal.com/gui/collections).
 
 &nbsp;

@@ -7,7 +7,7 @@ lang: en
 
 ## Who are we?
 
-We’re a digital security lab that investigates, builds, and shares defenses for social movements and communities in struggle. Our foundation: technical analysis with a human rights focus. We hack from the South.
+We’re a digital security lab that investigates, builds, and shares defenses for social movements and communities in struggle. Our foundation: technical analysis with a human rights and intersectionality approach. We hack from the South.
 
 ## What do we do?
 
