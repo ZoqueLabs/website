@@ -396,11 +396,11 @@ Use the emulator tools to **set coordinates** and test how Seeker records locati
 
 First, the tools. **Censys** and **Shodan** do not “read” pages like a normal search engine: they index **service metadata** (banners, headers, certificates, HTML titles, favicons...). That's why they are perfect for us here: **Seeker** recycles templates with very recognizable **favicons** and **titles**; If you catch one, it is common for several more to come out. For fine queries, Censys exposes a field-level search language ([CenQL](https://docs.censys.com/docs/censys-query-language)), and yes, you can filter by *favicons.hashes* or *html\_title*; [Shodan has its own syntax](https://help.shodan.io/the-basics/search-query-fundamentals).
 
-### Access levels
+### Access levels:
 
 * **No account**: you browse little.
 * **Free account**: more results, but with **credits** and visible limits (open extra pages, use API, etc.). 
-* **Paid**: much broader and, above all, **historical** quotas: see “when” something was observed, compare states over time, etc. (useful for correlating campaigns). Here we will not use historical payments, but they exist and are gold in long investigations. For Shodan, access also goes through **query credits** (filters,etc... spend). 
+* **Paid**: much broader and, above all, **historical** quotas: see “when” something was observed, compare states over time, etc. (useful for correlating campaigns). Here we will not use historical data, but it exist and is gold in long investigations. For Shodan, access also goes through **query credits** (filters,etc... spend). 
 
 > Mini-tip: In Shodan, the filter by favicon *does not* use SHA-256; use **MurmurHash3 (mmh3)** on the favicon. Don't mix the hashes or get frustrated.
 
@@ -408,10 +408,10 @@ First, the tools. **Censys** and **Shodan** do not “read” pages like a norma
 
 ### 0x03.1 Starting point: **favicon** of the reCAPTCHA template (with Censys)
 
-Let's start with how small a big clue leaves: the **favicon** of the **Google reCAPTCHA** template in Seeker. The idea is to remove the **SHA-256** from the template favicon and search for it in Censys (without an account).
+Let's start with a small clue with big traces: the **favicon** of the **Google reCAPTCHA** template in Seeker. The idea is to get the **SHA-256** from the template favicon and search for it in Censys (without an account).
 
 > **What is a favicon?**
-The *favicon* is the little icon you see in the browser tab and in bookmarks. Technically it is a small file (ICO/PNG/SVG) that the site serves (typically `/favicon.ico` or referenced in the `<head>`). Since many templates reuse the same favicon, their **hash** becomes an easy “mini-fingerprint” to search and correlate between instances (ideal for under-recycled hunting like Seeker's).
+The *favicon* is the little icon you see in the browser tab and in bookmarks. Technically it is a small file (ICO/PNG/SVG) that the site serves (typically `/favicon.ico` or referenced in the `<head>`). Since many templates reuse the same favicon, their **hash** becomes an easy “mini-fingerprint” to search and correlate between instances (ideal for over-recycled hunting like Seeker's).
 
 
 ```bash
@@ -424,14 +424,14 @@ $
 ```
 &nbsp;
 
-With the hash ready, in **Censys** (https://search.censys.io/) we look like this (use the prefix `sha256:` as is):
+With the hash ready, in **Censys** (https://search.censys.io/) we search like this (use the prefix `sha256:` as is):
 
 ```text
 services.http.response.favicons.hashes="sha256:4673c3ef82f32e37d0021d3683b5c132dbab0942e7137427fc9716235289c678"
 ```
 &nbsp;
 
-That field exists and accepts “`sha256:<hex>`” as a value; If you doubt, open any host and watch Censys name it in its panel.
+That field exists and accepts “`sha256:<hex>`” as a value; If you doubt, open any host and watch Censys name in its panel.
 
 <p align="center">
   <img src="/assets/images/exp0x02/censys_resultados_favicon_captcha.png" />
@@ -446,7 +446,7 @@ With that search we came up with several **instances**. In one of them (which we
   <img src="/assets/images/exp0x02/censys_vista_host_last_seen.png" />
 </p>
 
-In that same file, **two associated domains** appeared. One of them —**`canal.denuncias.me`**— interests us especially because of the Hispanic context. We take note (IP, domains, ASN, ports, any redirects you see in the HTTP response). We leave the organization of this data for the next chapter.
+In that same host, **two associated domains** appeared. One of them —**`canal.denuncias.me`**— interests us especially because of the Hispanic context. We take note (IP, domains, ASN, ports, any redirects you see in the HTTP response). We leave the organization of this data for the next chapter.
 
 ---
 
@@ -457,7 +457,7 @@ When the favicon is gone (or disappears), the hash stops working. There it's tim
 1. On Seeker's **service tab**, click **“View all data”**.
 2. In the table, locate the `html_title` field (it should look like this):
    `services.http.response.html_title = "Are you a robot ?"`
-3. To the left of that value is a **small loupe**. Click on it, and Censys will set up a search for that same title throughout its dataset.
+3. To the right of that value is a **small loupe**. Click on it, and Censys will set up a search for that same title throughout its dataset.
 4. Execute. Another instance of Seeker reCAPTCHA will appear. This one didn't come out with the favicon because it doesn't have one (or it was deleted), but the title gives it away.
 
 <p align="center">
@@ -474,13 +474,13 @@ services.http.response.html_title="Are you a robot\?"
 
 (The `html_title` field is searchable; Censys documents it and you can use quotes for exact matching).
 
-> Methodological note: In our initial run we found the host “B” by favicon. When revalidating for this write-up it no longer appeared: the favicon had disappeared. With historical payments we could compare the change over time. We leave it as a reasonable hypothesis, not certainty.
+> Methodological note: In our initial run we found the host “B” by favicon. When revalidating for this write-up it no longer appeared: the favicon had disappeared. With historical data (paid) we could compare the change over time. We leave it as a reasonable hypothesis, not certainty.
 
 ---
 
 #### 0x03.1.3 Tune (when the favicon “repeats too much”)
 
-If your hash returns too many sites (including legitimate ones), add traits that you have observed in real instances: headers, title, typical paths. For example, when we search for instances of the Google Drive template we find not only instances of Seeker but others that make noise in the results. In our case, we have observed that in Seeker instances the "Connection" header of the response is always in "close". Most non-Seeker hosts typically have this header in "keep-alive". Combining known **favicon + header** can narrow the search to _Seeker_only:
+If your hash returns too many sites (including legitimate ones), add traits that you have observed in real instances: headers, title, typical paths. For example, when we search for instances of the Google Drive template we find not only instances of Seeker but others that make noise in the results. In our case, we have observed that in Seeker instances the "Connection" header of the response is always in "close". Most non-Seeker hosts typically have this header in "keep-alive". Combining known **favicon + header** can narrow the search to _Seeker only_:
 
 
 ```text
@@ -511,13 +511,12 @@ First we confirm the `<title>` of the template “Near You”.
 
 ```bash
 $ cd seeker/template/nearyou
-$ls
+$ ls
 css index_temp.html js
 $ grep "<title>" index_temp.html
   <title>Near You | Meet New People, Make New Friends</title>
 $
 ```
-
 
 With the title validated, we look for it in Shodan as is:
 
@@ -555,13 +554,13 @@ With that, we learn two things: (1) when there is no favicon, the title is still
 
 #### 0x03.2.2 What do we keep?
 
-Nothing fancy: host, port, ASN, domain if any, and any interesting redirects or routes you see in the response. The fine organization goes in the next section; For now, just make sure each find has its minimum token.
+Nothing fancy: host, port, ASN, domain if any, and any interesting redirects or routes you see in the response. The fine organization goes in the next section; For now, just make sure each find has its minimum notes.
 
 ---
 
 ### 0x03.3 One more step on the context (without blowing our minds)
 
-This is where it stops being “looking for chains” and real intelligence begins. With very little you can:
+This is where it stops being “looking for strings” and real intelligence begins. With very little you can:
 
 * **Tie content to campaigns**: If the phishing page always redirects to a certain specific form, domain, or *landing*, you already have an operational **link**. That is enough to raise an alert for a specific group or region.
 * **Look at the map**: filtering by **country/ASN/organization** reveals whether things are concentrated in specific suppliers or areas. If the same title appears in repeated ASNs, it is a shared **infra track**.
@@ -582,21 +581,22 @@ We close with the same invitation as always: this barely scratches the surface o
 
 ### Before typing: observables vs. IOCs (and healthy doubt)
 
-Many **Seeker**, **IPs**, **URLs** and ports appear in this experiment with **Seeker**, **URLs** (the **8080** is Seeker's *default*), but when Seeker is used “in production” there is usually an HTTPS** tunnel/bridge in front. So...`http://IP:8080/` is it an **IOC** or just an **observable**? Short answer: **depends on use**.
+In this experiment with **Seeker** appeared a lot of **IPs**, **URLs** and ports  (the **8080** is Seeker's *default*), but when Seeker is used “in production” there is usually an HTTPS** tunnel/bridge in front. So...`http://IP:8080/` is it an **IOC** or just an **observable**? Short answer: **depends on use**.
 
-*An **observable** is something that you saw as is (an IP, a URL, a *title*), useful for searching/correlating.
-*An **IOC** suggests **actionable malice** (serves to block/alert with low cost of false positives).
+* An **observable** is something that you saw as is (an IP, a URL, a *title*), useful for searching/correlating.
+* An **IOC** suggests **actionable malice** (serves to block/alert with low cost of false positives).
 
-
+&nbsp;
 If someone blindly applied a lock based on your IPs/URLs “lab”, it could **affect legitimate hosts** (e.g., a server that temporarily hosted a test instance or a _endpoint_ of a CDN). The line between “observable” and “IOC” is drawn with **context** (we return to that below). Our rule of thumb: **we raise observables** first, we **tag**, and when there is sufficient evidence, we **promote** some to IOCs.
 
 ### How we are modeling it (our flow, not “the correct one”)
 
 For this work we decided to create in Colander a **threat** (*Threat*) per **each Seeker template** (reCAPTCHA, “Near You”, Telegram, etc.) and **associate the observables** with those threats. Sometimes a host served **more than one instance** with different **templates**; in those cases there are cross relationships and we prefer not to force a story:
 
-*If the link was clear, **we hung the observable** from the corresponding *template*.
-*If it wasn't, we **associated it with a “generic” instance of Seeker** and left a note of the ambiguity.
+* If the link was clear, **we hung the observable** from the corresponding *template*.
+* If it wasn't, we **associated it with a “generic” instance of Seeker** and left a note of the ambiguity.
 
+&nbsp;
 The truth? **Mental gymnastics**. There is no single perfect scheme. We learned that the only way to solve these dilemmas is to **do it**: get your hands dirty, try, change labels, look again. This chapter shows **a concrete example** (that of the **domain in Spanish** that interested us) so that the “how” and “why” behind each association can be seen.
 
 ### The example that we are going to download to Colander
@@ -615,7 +615,7 @@ The first thing we can do is use Colander's "investigate" function and see what 
   <img src="/assets/images/exp0x02/colander_investigate_ip.png" />
 </p>
 
-At the bottom we can see that we obtain 3 observables (among other things), including the domain that interests us most. If we click on the **+** compared to the observables we can add them to the case and with the advantage that the data extracted by **Threatr** will also be uploaded (a service brought by Colander that connects with other threat intelligence platforms to obtain more information about the observables we investigate, includes Shodan!).
+At the bottom we can see that we obtain 3 observables (among other things), including the domain that interests us most. If we click on the **+** next to the observables we can add them to the case and with the advantage that the data extracted by **Threatr** will also be uploaded (a service brought by Colander that connects with other threat intelligence platforms to obtain more information about the observables we investigate, includes Shodan!).
 
 Also, as in Censys, we have the magnifying glass to __privote__, in this case we can investigate the domain and then add it to the case.
 
@@ -626,11 +626,11 @@ But we have another important piece of information here, a "reverse dns" that do
 </p>
 
 
-Although we also have several observables, in this case we are seeing the "events", the first shows us that in a total virus analysis, 3 days ago, this url was detected as malicious, that is, someone else came across this recently, interesting.
+Although we also have several observables, in this case we are seeing the "events", the first shows us that in a VirusTotal analysis, 3 days ago, this url was detected as malicious, that is, someone else came across this recently, interesting.
 
 In this case we add the domain and event to the case using the **+** icons.
 
-What we add and what we don't, is a big question, we limit ourselves to domains, IP, and a couple of events and we all associate them with the "Seeker captcha" threat. An example of what the input for the IP looks like is this:
+What we add and what we don't, is a big question, we limit ourselves to domains, IP, and a couple of events and we all associate them with the "Seeker captcha" threat. An example of how the IP _screen_ looks, is this:
 
 <p align="center">
   <img src="/assets/images/exp0x02/colander_details_ip.png" />
@@ -654,7 +654,7 @@ In summary, here we saw the **basic** to sort findings in Colander; the true val
 
 ### This is “our way”, not the only one
 
-Colander is **powerful** and comes with very useful ideas for civil society teams: he operates **while you investigate**, not just as “final file”. There are alternatives like **MISP** (classic in *intel threat* and sharing), with their own advantages; In our experience, Colander has a kinder **curve** to carry **living cases** and then export what he learned. Also **coexists** well with other systems if you need to publish/consume *feeds*. (If you want to compare philosophies, [see the MISP page](https://www.misp-project.org/); we don't go into depth here). 
+Colander is **powerful** and comes with very useful ideas for civil society teams: it operates **while you investigate**, not just as “final file”. There are alternatives like **MISP** (classic in *intel threat* and sharing), with their own advantages; In our experience, Colander has a kinder **curve** to carry **living cases** and then export data easily. Also **coexists** well with other systems if you need to publish/consume *feeds*. (If you want to compare philosophies, [see the MISP page](https://www.misp-project.org/); we don't go into depth here). 
 
 ---
 
@@ -683,7 +683,7 @@ Colander has a key piece to “get out” what we found and **use it**: the **fe
 
    * **TLP (Traffic Light Protocol)** defines **how what is exported can be shared**.
    * **PAP (Permissible Actions Protocol)** defines **what can be done** with what is exported.
-   *The **only** feed will include entities whose **TLP/PAP** is greater than or equal to what you select here. If you select "WHITE" only the __whites__ will appear, if at the other end you select the "RED" all will appear: the red, yellow, green and white.
+   *The feed will **only** include entities whose **TLP/PAP** is greater than or equal to what you select here. If you select "WHITE" only the __whites__ will appear, if at the other end you select the "RED" all will appear: the red, yellow, green and white.
    *In this experiment we left **both in `WHITE`**, so **no** entities labeled as `YELLOW` are exported (we have some like that because they came from a legitimate server that was compromised and we prefer **no** to publish them as IOCs).
    
 <p align="center">
@@ -717,7 +717,7 @@ curl -H "X-Colander-Feed: Secret XxxXxXXXxx" \
 
 ### 0x05.3 Pass MVT with those IOCs (androidqf of the emulator)
 
-We have implanted an SMS with one of the malicious domains in an Android emulator, we did a pull with `androidqf` and we are going to use that pull in this test.
+We have implanted an SMS with one of the malicious domains in an Android emulator, we did a extraction with `androidqf` and we are going to use that extraction in this test.
 
 Now we run **MVT** pointing to our **STIX2** as a source of IOCs. Depending on your extraction type, the subcommand may vary:
 
@@ -738,7 +738,7 @@ And with this we complete the circle: from the idea, through research and ending
 
 ## --\[ 0x06 This is just the beginning ]--
 
-So far, pure warm-up. We scratched the surface and tasty things came out: hosts with more than one lure, others serving **malware**, some servers with **30+ Seeker** instances running at the same time. He who seeks, finds. At first it seems uphill, but when you get down to the task, the pieces fit together, the methodologies fall into place and —as we like to say—** we don't learn to hack: we hack to learn**.
+So far, pure warm-up. We scratched the surface and tasty things came out: hosts with more than one lure, others serving **malware**, some servers with **30+ Seeker** instances running at the same time. He who seeks, finds. At first it seems uphill, but when you get down to the task, the pieces fit together, the methodologies fall into place and —as we like to say— **we don't learn to hack: we hack to learn**.
 
 At **ZoqueLabs** this is our thing: experiment, fail fast, iterate and distill practices that serve **threat intelligence**. This experiment is still open; If you get stuck, if you want to share clues, if you're curious: **write to us**. We are a node in an ecosystem that needs more nodes —**more eyes on threats**— to detect them in time, act and document them.
 
