@@ -18,7 +18,7 @@ By: ZoqueLabs
 This writing is distributed under a Creative Commons CC BY-SA (Acknowledgment - Share Alike) license. It was produced with the support of <a href="https://www.derechosdigitales.org/en/home/">Derechos Digitales</a>. 
 <br>
 <br>
-<a href="">Spanish version</a>
+<a href="https://zoquelabs.xyz/threat_intel/2025/09/26/Experimento-0x02-Buscando-Seeker.html">Spanish version</a>
 </div>
 
 ## -[ToC ]-
