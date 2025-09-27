@@ -31,7 +31,7 @@ This writing is distributed under a Creative Commons CC BY-SA (Acknowledgment - 
 -> 0x05 [**Export Feeds and use them as IOCs in MVT**](#-0x05-export-feeds-and-use-them-as-iocs-in-mvt-)
 -> 0x06 [**This is just the beginning.**](#-0x06-this-is-just-the-beginning-)
 
-## --\[ 0x00 Enter ]--
+## --\[ 0x00 Intro ]--
 
 Greetings, people!
 
