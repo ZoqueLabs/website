@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Experiment 0x02: Threat Intelligence: Searching Seeker"
+date: 2025-09-26 10:38:45 -0500 
 categories: threat_intel
 tags: seeker censys shodan segfault opsec hacking colander mvt stix2 
 author: ZoqueLabs
@@ -9,7 +10,7 @@ lang: en
 ---
 
 <div align=center>
-<h1>--[ Experiment 0x02: Searching Seeker ]--</h1>
+<h1>--[ Experiment 0x02: Seeking Seeker ]--</h1>
 <h3>Threat intelligence</h3>
 By: ZoqueLabs
 <br>
