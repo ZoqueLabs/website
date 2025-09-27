@@ -4,7 +4,7 @@ title:  "Experimento 0x02: Inteligencia de amenazas: Buscando Seeker"
 categories: threat_intel
 tags: seeker censys shodan segfault opsec hacking colander mvt stix2 
 author: ZoqueLabs
-description: En este write-up exploramos el uso de Censys y Shodan para encontrar infraestructura maliciosa. Nos concentramos en programa llamado Seeker que usa phishing para capturar la localización de dispositivos (y de las personas que los poseen). Luego organizamos todo en colander y exportamos reglas STIX2 con los IOCs recolectados y los usamos en MVT.
+description: En este write-up exploramos el uso de Censys y Shodan para encontrar infraestructura maliciosa. Nos concentramos en un programa llamado Seeker que usa phishing para capturar la localización de dispositivos (y de las personas que los poseen). Luego organizamos todo en colander y exportamos reglas STIX2 con los IOCs recolectados y los usamos en MVT.
 lang: es
 ---
 
