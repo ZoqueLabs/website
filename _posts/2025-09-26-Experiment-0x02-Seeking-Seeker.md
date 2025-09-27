@@ -23,7 +23,7 @@ This writing is distributed under a Creative Commons CC BY-SA (Acknowledgment - 
 
 ## -[ToC ]-
 
--> 0x00 [**Enter**](#-0x00-enter-)
+-> 0x00 [**Intro**](#-0x00-enter-)
 -> 0x01 [**Understanding Seeker**](#-0x01-understanding-seeker-)
 -> 0x02 [**OpSec**](#-0x02-opsec-)
 -> 0x03 [**On the hunt (favicons first)**](#-0x03-on-the-hunt-favicons-first-)
