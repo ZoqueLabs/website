@@ -22,13 +22,13 @@ This writing is distributed under a Creative Commons CC BY-SA (Acknowledgment - 
 
 ## -[ToC ]-
 
--> 0x00 **Enter**
--> 0x01 **Understanding Seeker**
--> 0x02 **OpSec**
--> 0x03 **On the hunt (favicons first)**
--> 0x04 **Document findings in Colander**
--> 0x05 **Export Feeds and use them as IOCs in MVT**
--> 0x06 **This is just the beginning.**
+-> 0x00 [**Enter**](#-0x00-enter-)
+-> 0x01 [**Understanding Seeker**](#-0x01-understanding-seeker-)
+-> 0x02 [**OpSec**](#-0x02-opsec-)
+-> 0x03 [**On the hunt (favicons first)**](#-0x03-on-the-hunt-favicons-first-)
+-> 0x04 [**Document findings in Colander**](#-0x04-document-findings-in-colander-)
+-> 0x05 [**Export Feeds and use them as IOCs in MVT**](#-0x05-export-feeds-and-use-them-as-iocs-in-mvt-)
+-> 0x06 [**This is just the beginning.**](#-0x06-this-is-just-the-beginning-)
 
 ## --\[ 0x00 Enter ]--
 
@@ -209,7 +209,7 @@ What does this command do?
 - `nokey@localhost.run`: user “guest” to create the tunnel.
 - `StrictHostKeyChecking=accept-new`: Avoid the key verification prompt the first time.
 
-What you should see: A public `https://randomsub.localhost.run` URL that points directly to your local port.
+What you should see: A public `https://randomsub.lhr.life` URL that points directly to your local port.
 
 <p align="center">
   <img src="/assets/images/exp0x02/6_Tunnel_URL_Localhostrun.png" />
@@ -402,7 +402,7 @@ First, the tools. **Censys** and **Shodan** do not “read” pages like a norma
 * **Free account**: more results, but with **credits** and visible limits (open extra pages, use API, etc.). 
 * **Paid**: much broader and, above all, **historical** quotas: see “when” something was observed, compare states over time, etc. (useful for correlating campaigns). Here we will not use historical data, but it exists and is gold in long investigations. For Shodan, access also goes through **query credits** (filters,etc... spend). 
 
-> Mini-tip: In Shodan, the filter by favicon *does not* use SHA-256; use **MurmurHash3 (mmh3)** on the favicon. Don't mix the hashes or get frustrated.
+> Mini-tip: In Shodan, the filter by favicon *does not* use SHA-256; use **MurmurHash3 (mmh3)** on the favicon. Don't mix the hashes.
 
 ---
 
@@ -416,9 +416,9 @@ The *favicon* is the little icon you see in the browser tab and in bookmarks. Te
 
 ```bash
 $ cd seeker/template/captcha
-$ls
+$ ls
 anchor.html css favicon.ico fonts images index_temp.html js
-$sha256sum favicon.ico
+$ sha256sum favicon.ico
 4673c3ef82f32e37d0021d3683b5c132dbab0942e7137427fc9716235289c678 favicon.ico
 $   
 ```
@@ -440,7 +440,7 @@ That field exists and accepts “`sha256:<hex>`” as a value; If in doubt, open
 
 #### 0x03.1.1 What we saw in the first shot?
 
-With that search we came up with several **instances**. In one of them (which we will use as an example) Censys showed that the Seeker service was last observed on **September 4, 2025**, while other services on the same host are still active at the time of writing (10 days later). That temporal contrast is just the kind of clue that helps understand whether they **turned off**, **switched**, or **tuned** anything.
+In the **instance** we found (which we will use as an example) Censys showed that the Seeker service was last observed on **September 4, 2025**, while other services on the same host are still active at the time of writing (10 days later). That temporal contrast is just the kind of clue that helps understand whether they **turned off**, **switched**, or **tuned** anything.
 
 <p align="center">
   <img src="/assets/images/exp0x02/censys_vista_host_last_seen.png" />
@@ -581,7 +581,7 @@ We close with the same invitation as always: this barely scratches the surface o
 
 ### Before typing: observables vs. IOCs (and healthy doubt)
 
-In this experiment with **Seeker** we saw a lot of **IPs**, **URLs** and ports  (the **8080** is Seeker's *default*), but when Seeker is used “in production” there is usually an HTTPS** tunnel/bridge in front. So...`http://IP:8080/` is it an **IOC** or just an **observable**? Short answer: **depends on use**.
+In this experiment with **Seeker** we saw a lot of **IPs**, **URLs** and ports  (the **8080** is Seeker's *default*), but when Seeker is used “in production” there is usually an **HTTPS** tunnel/bridge in front. So...`http://IP:8080/` is it an **IOC** or just an **observable**? Short answer: **depends on use**.
 
 * An **observable** is something that you saw as is (an IP, a URL, a *title*), useful for searching/correlating.
 * An **IOC** suggests **actionable malice** (serves to block/alert with low risk of false positives).

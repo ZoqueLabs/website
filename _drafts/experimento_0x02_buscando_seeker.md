@@ -22,13 +22,13 @@ Este escrito se distribuye con una licencia Creative Commons CC BY-SA (Reconocim
 
 ## -[ ToC ]-
 
--> 0x00 **Intro**
--> 0x01 **Entendiendo Seeker**
--> 0x02 **OpSec**
--> 0x03 **A la caza (favicons primero)**
--> 0x04 **Documentar hallazgos en Colander**
--> 0x05 **Exportar Feeds y usarlos como IOCs en MVT**
--> 0x06 **Esto es solo el comienzo.**
+-> 0x00 [**Intro**](#-0x00-intro-)
+-> 0x01 [**Entendiendo Seeker**](#-0x01-entendiendo-seeker-)
+-> 0x02 [**OpSec**](#-0x02-opsec-)
+-> 0x03 [**A la caza (favicons primero)**](#-0x03-a-la-caza-favicons-primero-)
+-> 0x04 [**Documentar hallazgos en Colander**](#-0x04-documentar-hallazgos-en-colander-)
+-> 0x05 [**Exportar Feeds y usarlos como IOCs en MVT**](#-0x05-exportar-feeds-y-usarlos-como-iocs-en-mvt-)
+-> 0x06 [**Esto es solo el comienzo.**](#-0x06-esto-es-solo-el-comienzo-)
 
 ## --\[ 0x00 Intro ]--
 
@@ -50,7 +50,7 @@ Este escrito viene cargado: herramientas de hackeo, rastreo de infraestructura, 
 ## --[ 0x01 Entendiendo Seeker ]--
 
 ### 0x01.1 Lo básico
-[Seeker](https://github.com/thewhiteh4t/seeker) es una herramienta que usa con las _APIs_ del navegador para extraer ubicación precisa y otros datos del dispositivo. Fue creada para realizar _geolocation phishing_, es decir, engañar a un objetivo para que comparta su ubicación real a través del navegador. Pero eso no es todo, también recolecta metadatos del dispositivo, como modelo, resolución de pantalla, sistema operativo, red y más. No instala nada, no explota vulnerabilidades, no se mete con el sistema operativo. Solo espera a que la víctima entre a un enlace y le dé permiso al navegador para compartir la ubicación. Con eso, Seeker hace su trabajo.
+[Seeker](https://github.com/thewhiteh4t/seeker) es una herramienta que usa las _APIs_ del navegador para extraer ubicación precisa y otros datos del dispositivo. Fue creada para realizar _geolocation phishing_, es decir, engañar a un objetivo para que comparta su ubicación real a través del navegador. Pero eso no es todo, también recolecta metadatos del dispositivo, como modelo, resolución de pantalla, sistema operativo, red y más. No instala nada, no explota vulnerabilidades, no se mete con el sistema operativo. Solo espera a que la víctima entre a un enlace y le dé permiso al navegador para compartir la ubicación. Con eso, Seeker hace su trabajo.
 
 A nivel técnico, Seeker levanta un servidor web que sirve una página personalizada (tipo Google Drive, grupos de Telegram, Whatsapp..). Esa página incluye un script en JavaScript que pide acceso a la ubicación usando la API de geolocalización de HTML5. Cuando el navegador lo permite, Seeker captura:
 
@@ -210,7 +210,7 @@ ssh -R80:0:8080 -o StrictHostKeyChecking=accept-new nokey@localhost.run
 - `nokey@localhost.run`: usuario “invitado” para crear el túnel.
 - `StrictHostKeyChecking=accept-new`: evita el prompt de verificación de clave la primera vez.
 
-Qué deberías ver: una URL pública tipo `https://randomsub.localhost.run` que apunta directo a tu puerto local.
+Qué deberías ver: una URL pública tipo `https://randomsub.lhr.life` que apunta directo a tu puerto local.
 
 <p align="center">
   <img src="/assets/images/exp0x02/6_Tunnel_URL_Localhostrun.png" />
@@ -341,6 +341,7 @@ gost -L=http://127.0.0.1:8081 -F=socks5://127.0.0.1:1080
 * `-L=http://127.0.0.1:8081` abre un **proxy HTTP** local en `:8081`.
 * `-F=socks5://127.0.0.1:1080` lo encadena al **SOCKS5** del SSH.
 
+&nbsp;
 **Emulador Android (AVD)**
 Configura **Wi-Fi → Proxy manual**:
 
@@ -402,7 +403,7 @@ Primero, las herramientas. **Censys** y **Shodan** no “leen” páginas como u
 * **Cuenta gratuita**: más resultados, pero con **créditos** y límites visibles (abrir páginas extra, usar API, etc.). 
 * **De pago**: cuotas mucho más amplias y, sobre todo, **históricos**: ver “cuándo” se observó algo, comparar estados en el tiempo, etc. (útil para correlacionar campañas). Aquí no usaremos históricos pagos, pero existen y son oro en investigaciones largas. Para Shodan, el acceso también va por **créditos de consulta** (filtros, paginar… gastan). 
 
-> Mini-tip: en Shodan, el filtro por favicon *no* usa SHA-256; usa **MurmurHash3 (mmh3)** sobre el favicon. No mezcles los hashes o te frustras.
+> Mini-tip: en Shodan, el filtro por favicon *no* usa SHA-256; usa **MurmurHash3 (mmh3)** sobre el favicon. No mezcles los hashes.
 
 ---
 
@@ -439,7 +440,7 @@ Ese campo existe y acepta “`sha256:<hex>`” como valor; si dudas, abre cualqu
 
 #### 0x03.1.1 Lo que vimos en el primer tiro
 
-Con esa búsqueda nos salieron varias **instancias**. En una de ellas (la que usaremos como ejemplo) Censys mostraba que el servicio de Seeker se observó por última vez el **4 de septiembre de 2025**, mientras que otros servicios del mismo host siguen activos al momento de escribir esto (10 días después). Ese contraste temporal es justo el tipo de pista que ayuda a entender si **apagaron**, **cambiaron** o **ajustaron** algo.
+En la instancia que encontramos (que usaremos como ejemplo) Censys mostraba que el servicio de Seeker se observó por última vez el **4 de septiembre de 2025**, mientras que otros servicios del mismo host siguen activos al momento de escribir esto (10 días después). Ese contraste temporal es justo el tipo de pista que ayuda a entender si **apagaron**, **cambiaron** o **ajustaron** algo.
 
 <p align="center">
   <img src="/assets/images/exp0x02/censys_vista_host_last_seen.png" />
