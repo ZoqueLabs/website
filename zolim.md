@@ -6,7 +6,7 @@ mermaid: true
 datatable: true
 ---
 
-# ZOLIM - Zoque-Observatorio de Infraestructura Maliciosa
+# ZOLIM - Zoque-Observatorio Latinoamericano de Infraestructura Maliciosa
 
 > **ZOLIM (Observatorio Latinoamericano de Infraestructura Maliciosa de Zoque)** es una iniciativa de investigación de ZoqueLabs orientada a documentar, analizar y publicar **snapshots periódicos de infraestructura maliciosa en América Latina**, con énfasis en sistemas de comando y control (C2) y tooling asociado.
 
