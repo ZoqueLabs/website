@@ -18,7 +18,7 @@ By: ZoqueLabs
 This writing is distributed under a Creative Commons CC BY-SA (Acknowledgment - Share Alike) license.
 <br> 
 <br>
-<a href="https://zoquelabs.xyz/experimento/2026/02/28/diarios-de-blind-eagle-1.html">English version</a>
+<a href="https://zoquelabs.xyz/experimento/2026/02/28/diarios-de-blind-eagle-1.html">Spanish version</a>
 </div>
 
 ## -[ 0x00 Enter }-

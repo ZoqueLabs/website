@@ -18,7 +18,7 @@ Por: ZoqueLabs
 Este escrito se distribuye con una licencia Creative Commons CC BY-SA (Reconocimiento - Compartir Igual).
 <br> 
 <br>
-<a href="https://zoquelabs.xyz/">English version</a>
+<a href="https://zoquelabs.xyz/experiment/2026/02/28/blind-eagle-diaries-1.html">English version</a>
 </div>
 
 ## -[ 0x00 Intro }-
