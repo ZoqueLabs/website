@@ -5,7 +5,7 @@ date: 2026-02-28 00:00:45 -0500
 categories: experimento
 tags: inteligencia de amenazas, blind eagle, svg, forence, apt 
 author: ZoqueLabs
-description: Primera entrega sobre un serie de articulos sobre Blind Eagle, un apt colombiano conocido por aprovechar infraestructura debil de entidades gubernamentales para engañar personas y hacerlas instalar malware. En esta ocación analizamos un nuevo vector de ataque de este grupo usando imagenes .SVG.
+description: Primera entrega de un serie de articulos sobre Blind Eagle, un APT colombiano conocido por aprovechar infraestructura debil de entidades gubernamentales para engañar personas y hacerlas instalar malware. En esta ocación analizamos un nuevo vector de ataque de este grupo usando imagenes .SVG.
 lang: es
 ---
 
