@@ -12,7 +12,7 @@ lang: en
 <div align=center>
 <h1>--[ Experiment 0x03: The Blind Eagle Diaries (part 1): Analyzing Malicious SVGs ]--</h1>
 <h3>February 2026</h3>
-By: ZoqueLabs
+By: ZoqueLabs and friends
 <br>
 <br>
 This writing is distributed under a Creative Commons CC BY-SA (Acknowledgment - Share Alike) license.
