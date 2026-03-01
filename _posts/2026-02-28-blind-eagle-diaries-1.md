@@ -162,7 +162,7 @@ This tells us that the SVG is a graphical artifact that should motivate the atta
 
 We verified this by opening the debugged svg in an online SVG viewer such as https://www.svgviewer.dev/ and observing that the SVG actually draws an interface that simulates being a section of a system of the Attorney General's Office of Colombia, which indicates that related documentation can be downloaded. with a process with a large button that says DOWNLOAD BALLOT:
 
-![download_boleta](/assets/images/exp0x03/download_boleta.png)
+![download_boleta](/assets/images/exp0x03/descargar_boleta.png)
 
 This concludes the first part of the analysis by concluding that the SVG file is used as an infection vector not only for its ability to insert javascript code into a browser but also as a social engineering mechanism to incentivize the user to interact with the attack artifact and activate malicious code.
 
@@ -281,7 +281,7 @@ fn();
 ## -[ 0x04 The other Script ]-
 
 When opening the new file `blob_file.txt` in a text editor we see that it is an HTML file with the basic structure of a simple website: header, style, body and scripts.
-![preparing_download](/assets/images/exp0x03/preparing_download.png)
+![preparing_download](/assets/images/exp0x03/preparando_descarga.png)
 
 Using a similar python code with which the SVG was analyzed, we created a new copy of the file by deleting the script and then previewing it in an online html editor such as https://html.onlineviewer.net/, we will observe that this is another visual interface similar to the previous one that emulates a system of the Attorney General's Office of the Nation that downloads an encrypted file and provides a password to decrypt.
 
