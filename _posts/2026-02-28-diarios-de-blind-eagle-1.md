@@ -21,7 +21,7 @@ Este escrito se distribuye con una licencia Creative Commons CC BY-SA (Reconocim
 <a href="https://zoquelabs.xyz/experiment/2026/02/28/blind-eagle-diaries-1.html">English version</a>
 </div>
 
-## -[ 0x00 Intro }-
+## -[ 0x00 Intro ]-
 
 Esta es la primera parte de una serie sobre Blind Eagle (en adelante, BE), un “APT” colombiano activo al menos desde 2016 y con campañas registradas en varios países de Latinoamérica.
 

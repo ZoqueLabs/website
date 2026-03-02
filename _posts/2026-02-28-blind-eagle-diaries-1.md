@@ -21,7 +21,7 @@ This writing is distributed under a Creative Commons CC BY-SA (Acknowledgment - 
 <a href="https://zoquelabs.xyz/experimento/2026/02/28/diarios-de-blind-eagle-1.html">Spanish version</a>
 </div>
 
-## -[ 0x00 Enter }-
+## -[ 0x00 Enter ]-
 
 This is the first part of a series about Blind Eagle (hereinafter, BE), a Colombian “APT” active at least since 2016 and with campaigns registered in several Latin American countries.
 
