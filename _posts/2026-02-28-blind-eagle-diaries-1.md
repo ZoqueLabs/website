@@ -139,9 +139,11 @@ with open('cleaned.svg', 'w') as file:
 		else:
 			file.write(str(tag_content))
 	file.write('</svg>')
+```
 
 Additionally, we list the attributes of the main svg tag:
 
+```python
 for x in svg.attrs:
 ... print(x)
 ```

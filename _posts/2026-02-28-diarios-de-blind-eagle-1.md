@@ -139,9 +139,11 @@ with open('cleaned.svg', 'w') as file:
 		else:
 			file.write(str(tag_content))
 	file.write('</svg>')
+```
 
 Adicionalmente listamos los atributos del tag principal svg:
 
+```python
 for x in svg.attrs:
 ...     print(x)
 ```
@@ -265,7 +267,7 @@ El otro bloque está compuesto por 38 funciones con este formato:
 ```
 <br> 
 
-Aunque a simple vista parece una función compleja antes de analizarla hacemos el mismo procedimiento de buscar el nombre de la función dentro del archivo  y encontrar que esta función no se llama desde ninguna parte por lo que es también código de relleno sin ninguna otra funcionalidad que engañar análisis heurísticos rudimentarios..
+Aunque a simple vista parece una función compleja antes de analizarla hacemos el mismo procedimiento de buscar el nombre de la función dentro del archivo  y encontrar que esta función no se llama desde ninguna parte por lo que es también código de relleno sin ninguna otra funcionalidad que engañar análisis heurísticos rudimentarios.
 
 Procedemos a analizar el contenido del archivo generado por la función `openDocument()`, lo podemos hacer usando cualquier consola JS, por ejemplo la de node, copiando la variable maliciosa, para luego pasarla por la función `atob()` y escribir el resultado en un nuevo archivo.
 
@@ -337,7 +339,7 @@ En este momento del proceso es claro que el objetivo del archivo analizado es de
 
 Y otras cadenas que anulan cualquier logro en el polimorfismo ya que son constantes entre cada sample analizado, por lo que se podría detectar el ataque con cualquier análisis estático que busque estos poco comunes textos. Increiblemente o aunque no tanto, la mayoria de engines de antivirus son engañados por el payload inicial, o al menos asi lo indican los analisis en virustotal de uno de los samples (https://www.virustotal.com/gui/file/7ecc8a25f51d4de1097f05eb68619d4b21e7de8dad077422ede4015941645be3)
 
-En la siguiente parte del análisis usaremos las técnicas explicadas anteriormente, para analizar varios archivos automáticamente, generar vectores que describen las features de cada uno y usan un algoritmo de clusterización para identificar si todos los samples se relacionan entre sí o pertenecen a otra campaña/familia de malware.
+En la siguiente parte del análisis usaremos las técnicas explicadas anteriormente, para analizar varios archivos automáticamente, generar vectores que describen las features de cada uno y usar un algoritmo de clusterización para identificar si todos los samples se relacionan entre sí o pertenecen a otra campaña/familia de malware.
 
 ---
 
