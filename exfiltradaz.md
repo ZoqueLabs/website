@@ -12,7 +12,7 @@ datatable: true
 
 - Dataset: https://github.com/ZoqueLabs/leaks-data  
 - Pipeline: https://github.com/ZoqueLabs/leak-observatory  
-- About: [Español](/filtracionesleaks/2026/03/25/acerca-de-exfiltradaz.html) [English](en/filtracionesleaks/2026/03/25/about-exfiltradaz.html)
+- About: [Español](/filtracionesleaks/2026/03/25/acerca-de-exfiltradaz.html) [English](/leaks/2026/03/25/about-exfiltradaz.html)
 
 ---
 ## Reporte de filtraciones
@@ -46,6 +46,10 @@ El país con mayor aumento de actividad en este periodo fue **Brazil**, con **12
 ## Distribución por país
 
 ```mermaid
+---
+config:
+  theme: dark
+---
 pie title Países
   "Mexico" : 13
   "Peru" : 5
@@ -61,6 +65,10 @@ pie title Países
 ## Distribución por sector
 
 ```mermaid
+---
+config:
+  theme: dark
+---
 pie title Sectores
   "Credential Marketplace" : 26
   "Other" : 30
@@ -72,6 +80,10 @@ pie title Sectores
 ## Sector → País
 
 ```mermaid
+---
+config:
+  theme: dark
+---
 sankey-beta
   Mexico,Credential Marketplace,5
   Mexico,Other,6
@@ -101,6 +113,10 @@ sankey-beta
 ## Origen → País
 
 ```mermaid
+---
+config:
+  theme: dark
+---
 sankey-beta
   niflheim,Mexico,6
   niflheim,Peru,4
@@ -136,6 +152,10 @@ sankey-beta
 ## Autor → País mencionado
 
 ```mermaid
+---
+config:
+  theme: dark
+---
 sankey-beta
   comboposter,Mexico,4
   comboposter,Peru,4
