@@ -52,19 +52,38 @@
       -->
     <script>
       $(document).ready(function(){
+          let table_id = $('div.datatable-begin').nextUntil('div.datatable-end', 'table');
           $('div.datatable-begin').nextUntil('div.datatable-end', 'table').addClass('display compact');
-          $('table.display').DataTable( {
-              paging: true,
-              stateSave: true,
-              searching: true,
-              order: [[9, 'dec']],
-              scrollX: true,
-              autoWidth: false,
-              columnDefs: [ {
-                targets: [1,2],
-                render: DataTable.render.ellipsis( 15 )
-              } ]
+          if ( table_id.prevObject[0].baseURI.includes("exfiltradaz")) {
+             console.log("exfiltradaz");
+              $('table.display').DataTable( {
+                paging: true,
+                stateSave: false,
+                searching: true,
+                order: [[0, 'dec']],
+                scrollX: true,
+                autoWidth: false,
+                columnDefs: [ {
+                  targets: [1,2],
+                  render: DataTable.render.ellipsis( 15 )
+                } ]
           });
+          }
+          else {
+              console.log("zolim");
+              $('table.display').DataTable( {
+                  paging: true,
+                  stateSave: false,
+                  searching: true,
+                  order: [[9, 'dec']],
+                  scrollX: true,
+                  autoWidth: false,
+                  columnDefs: [ {
+                    targets: [1,2],
+                    render: DataTable.render.ellipsis( 15 )
+                  } ]
+              });
+          }
        });
     </script>
     {% endif %}
