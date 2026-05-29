@@ -17,22 +17,24 @@ datatable: true
 ---
 ## Reporte de filtraciones
 
-Snapshot actual: [https://github.com/ZoqueLabs/leaks-data/blob/main/reports/2026-05-15-filtraciones-latam.md](https://github.com/ZoqueLabs/leaks-data/blob/main/reports/2026-05-15-filtraciones-latam.md)
+Snapshot actual: [https://github.com/ZoqueLabs/leaks-data/blob/main/reports/2026-05-29-filtraciones-latam.md](https://github.com/ZoqueLabs/leaks-data/blob/main/reports/2026-05-29-filtraciones-latam.md)
 
-**Cobertura de datos:** 2026-05-05 → 2026-05-15
+**Cobertura de datos:** 2026-05-15 → 2026-05-29
 
 Este reporte resume referencias a filtraciones observadas en foros, mercados y feeds de monitoreo del ecosistema de filtraciones.
 
-Durante este periodo se identificaron **11 filtraciones** vinculadas a **7 países**. **Argentina y Mexico** concentran la mayor parte de los registros observados.
+Durante este periodo se identificaron **16 filtraciones** vinculadas a **7 países**. **Brazil y Argentina** concentran la mayor parte de los registros observados.
 
-Los sectores más frecuentes corresponden a **Other (5), Database Leak (2), Credential Marketplace (2)**. En esta clasificación, la categoría Other reúne publicaciones que no pudieron asociarse claramente a un sector específico. Estas entradas suelen incluir referencias generales a filtraciones, discusiones en foros o listados de datos cuya naturaleza no es posible identificar con precisión a partir de la información disponible.
+Los sectores más frecuentes corresponden a **Other (8), Government (3), Database Leak (2)**. En esta clasificación, la categoría Other reúne publicaciones que no pudieron asociarse claramente a un sector específico. Estas entradas suelen incluir referencias generales a filtraciones, discusiones en foros o listados de datos cuya naturaleza no es posible identificar con precisión a partir de la información disponible.
 
-Varias de estas publicaciones aparecen en plataformas como **darkweb, niflheim, xforums**, donde suelen circular este tipo de referencias a bases de datos o listados de credenciales.
+Varias de estas publicaciones aparecen en plataformas como **darkweb, xforums, shadowcarders**, donde suelen circular este tipo de referencias a bases de datos o listados de credenciales.
 
 ## Cambios desde el reporte anterior
 
 **Nuevos autores observados:**
-- uwutaki
+- omartaha
+- peps33
+- server1172
 
 ## Distribución por país
 
@@ -42,13 +44,13 @@ config:
   theme: dark
 ---
 pie title Países
-  "Venezuela" : 1
-  "Argentina" : 3
-  "Brazil" : 1
-  "Mexico" : 3
-  "Peru" : 1
-  "Colombia" : 1
+  "Ecuador" : 2
+  "Brazil" : 5
   "Uruguay" : 1
+  "Colombia" : 2
+  "Argentina" : 3
+  "Mexico" : 2
+  "Venezuela" : 1
 ```
 
 ## Distribución por sector
@@ -59,11 +61,12 @@ config:
   theme: dark
 ---
 pie title Sectores
+  "Other" : 8
+  "Healthcare" : 1
   "Database Leak" : 2
-  "Government" : 1
-  "Other" : 5
+  "Government" : 3
   "Financial" : 1
-  "Credential Marketplace" : 2
+  "Credential Marketplace" : 1
 ```
 
 ## Sector → País
@@ -74,16 +77,19 @@ config:
   theme: dark
 ---
 sankey-beta
-  Venezuela,Database Leak,1
-  Argentina,Government,1
-  Argentina,Database Leak,1
-  Argentina,Other,1
-  Brazil,Other,1
-  Mexico,Other,1
-  Mexico,Credential Marketplace,2
-  Peru,Financial,1
+  Ecuador,Other,1
+  Ecuador,Government,1
+  Brazil,Healthcare,1
+  Brazil,Other,3
+  Brazil,Credential Marketplace,1
+  Uruguay,Database Leak,1
+  Colombia,Financial,1
   Colombia,Other,1
-  Uruguay,Other,1
+  Argentina,Government,1
+  Argentina,Other,2
+  Mexico,Other,1
+  Mexico,Government,1
+  Venezuela,Database Leak,1
 ```
 
 ## Origen → País
@@ -94,13 +100,18 @@ config:
   theme: dark
 ---
 sankey-beta
-  darkweb,Venezuela,1
-  darkweb,Argentina,2
+  darkweb,Ecuador,2
+  darkweb,Uruguay,1
   darkweb,Colombia,1
+  darkweb,Argentina,2
+  darkweb,Mexico,2
+  darkweb,Venezuela,1
+  blackhatworld,Brazil,1
+  shadowcarders,Brazil,2
+  niflheim,Brazil,1
+  xforums,Colombia,1
   xforums,Brazil,1
-  xforums,Uruguay,1
-  niflheim,Mexico,3
-  blackhatworld,Argentina,1
+  xforums,Argentina,1
 ```
 
 ## Autor → País mencionado
@@ -111,10 +122,12 @@ config:
   theme: dark
 ---
 sankey-beta
-  hamzasec,Brazil,1
-  hamzasec,Uruguay,1
-  comboposter,Mexico,3
-  uwutaki,Argentina,1
+  omartaha,Brazil,1
+  peps33,Brazil,2
+  comboposter,Brazil,1
+  server1172,Colombia,1
+  server1172,Argentina,1
+  highwaytoshell,Brazil,1
 ```
 
 ## Registro de incidentes
@@ -134,24 +147,22 @@ sankey-beta
 </tr>
 </thead>
 <tbody>
-<tr><td>2026-05-15</td><td>Venezuela</td><td>Database Leak</td><td>darkweb</td><td>None</td><td>DATABASE CANTV ABA ULTRA Venezuela 2026 - 7.5K Personal Data 4K Data OLT GPON Fiber Optic</td></tr>
-<tr><td>2026-05-15</td><td>Argentina</td><td>Government</td><td>darkweb</td><td>None</td><td>DATABASE MINISTERIO DE SALUD ARGENTINA | 52M LINES | 700GB LEAK</td></tr>
-<tr><td>2026-05-13</td><td>Brazil</td><td>Other</td><td>xforums</td><td>hamzasec</td><td>Db Brazil 85M Leaked</td></tr>
-<tr><td>2026-05-13</td><td>Mexico</td><td>Other</td><td>niflheim</td><td>comboposter</td><td>⭐️HQ⭐️ MEXICO 344.946 LINES GOOD FOR ALL⭐️</td></tr>
-<tr><td>2026-05-13</td><td>Peru</td><td>Financial</td><td>None</td><td>None</td><td>{
-  "Source": "https://cardforum.cc/",
-  "Content": "fulllz.asia [+] ATM Cloned Cards CCV USA JAPAN PERU CANADA FRANCE ITALY EURO Cheap Pr", 
-  "author": "<a href="https://cardforum.cc/member.php?action=profile&uid=142087">dumpstop10</a>",
-  "Detection Date": "13 May 2026",
-  "Type": "Data leak"
-}
-**🔹 ****t.me/breachdetect****  🔹**</td></tr>
-<tr><td>2026-05-12</td><td>Mexico</td><td>Credential Marketplace</td><td>niflheim</td><td>comboposter</td><td>✪ [ 112 K++ ] Combo ✪ @Elite_Cloud1 ✪ { Mexico } ✪ [ 31/MAR/2026 ] ✪</td></tr>
-<tr><td>2026-05-11</td><td>Mexico</td><td>Credential Marketplace</td><td>niflheim</td><td>comboposter</td><td>MEXICO BELGUIM SPAIN CHINA KOREA POLAND AUSTRALIA FRESH COMBOLISTS</td></tr>
-<tr><td>2026-05-09</td><td>Argentina</td><td>Database Leak</td><td>darkweb</td><td>None</td><td>ARGENTINA CAR OWNERS DATABASE - PwnForums</td></tr>
-<tr><td>2026-05-07</td><td>Colombia</td><td>Other</td><td>darkweb</td><td>None</td><td>(3) TXT - Colombia [CO] 219K (part 3 of Latin America) | XSS (ex DaMaGeLaB)</td></tr>
-<tr><td>2026-05-06</td><td>Argentina</td><td>Other</td><td>blackhatworld</td><td>uwutaki</td><td>India, Pakistan, Brazil, and Argentina payment gateway</td></tr>
-<tr><td>2026-05-06</td><td>Uruguay</td><td>Other</td><td>xforums</td><td>hamzasec</td><td>Db Expoınclusion Uruguay</td></tr>
+<tr><td>2026-05-28</td><td>Ecuador</td><td>Other</td><td>darkweb</td><td>None</td><td>DOCUMENTS Polizas de las Fuerzas Armadas del Ecuador</td></tr>
+<tr><td>2026-05-25</td><td>Brazil</td><td>Healthcare</td><td>blackhatworld</td><td>omartaha</td><td>Expanding Partnerships in Key GEOs: Canada, Mexico, Brazil, Turkey, India</td></tr>
+<tr><td>2026-05-23</td><td>Brazil</td><td>Other</td><td>shadowcarders</td><td>peps33</td><td>({+447426976269})<buy certified weight lost peptides online in brazil, puerto rico, philippines, usa</td></tr>
+<tr><td>2026-05-23</td><td>Brazil</td><td>Other</td><td>shadowcarders</td><td>peps33</td><td>{+447426976269})][Peptides vs steroids Available in Brazil, Puerto Rico, Philippines, USA, Australia</td></tr>
+<tr><td>2026-05-22</td><td>Uruguay</td><td>Database Leak</td><td>darkweb</td><td>None</td><td>SELLING uruguay: MEC BUTIA [Databases] [Becas] [10k Sample] [Citizens]</td></tr>
+<tr><td>2026-05-22</td><td>Ecuador</td><td>Government</td><td>darkweb</td><td>None</td><td>DATABASE Ministry of Environment and Energy of Ecuador DATABASE JSON</td></tr>
+<tr><td>2026-05-21</td><td>Colombia</td><td>Financial</td><td>darkweb</td><td>None</td><td>DATABASE Banco Agrario -- EmergiaCC Conalcreditos ColombiA</td></tr>
+<tr><td>2026-05-21</td><td>Brazil</td><td>Credential Marketplace</td><td>niflheim</td><td>comboposter</td><td>⭐[400k]⭐ MAILPASS ⚡UHQ DATABASE BRAZIL TARGETED⚡ - FRESH DATA- 2026 ⭐</td></tr>
+<tr><td>2026-05-20</td><td>Colombia</td><td>Other</td><td>xforums</td><td>server1172</td><td>Quindio University Colombia - 3.26 GB FREE</td></tr>
+<tr><td>2026-05-19</td><td>Argentina</td><td>Government</td><td>darkweb</td><td>None</td><td>[~478k] Argentina https://intranet.jus.mendoza.gov.ar - Legal personnel records including contacts, IDs, emails, job titles</td></tr>
+<tr><td>2026-05-19</td><td>Mexico</td><td>Other</td><td>darkweb</td><td>None</td><td>high-level education for entrepreneurs / Mexico / 315K+ Leads</td></tr>
+<tr><td>2026-05-19</td><td>Brazil</td><td>Other</td><td>xforums</td><td>highwaytoshell</td><td>[RDWeb] Government (Municipal) - Brazil ($250M - $500M revenue)</td></tr>
+<tr><td>2026-05-17</td><td>Argentina</td><td>Other</td><td>darkweb</td><td>None</td><td>ARGENTINA IOMA - GDEBA - BCRA ALL LEAK FREE PART2 (corrected link)</td></tr>
+<tr><td>2026-05-16</td><td>Mexico</td><td>Government</td><td>darkweb</td><td>None</td><td>[MEXICO] SYSTEM TO DOX ANY LAWYER IN THE STATE OF BAJA CALIFORNIA [MEXICO]</td></tr>
+<tr><td>2026-05-16</td><td>Venezuela</td><td>Database Leak</td><td>darkweb</td><td>None</td><td>DATABASE MOVISTAR VENEZUELA 2026 DB 4.15 Million Customer Numbers.</td></tr>
+<tr><td>2026-05-16</td><td>Argentina</td><td>Other</td><td>xforums</td><td>server1172</td><td>ARGENTINA BCRA - GDEBA IOMA ALL LEAK FREE</td></tr>
 </tbody></table>
 
 <div class="datatable-end"></div>
